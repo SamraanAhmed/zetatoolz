@@ -35,8 +35,10 @@ Please provide current market pricing for today, ${today}.
 
 Thank you for your assistance.`;
 
-    const mailtoLink = `mailto:sales@zetatoolz.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoLink;
+    // Gmail compose URL
+    const gmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent('xeedemo1@gmail.com')}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    window.open(gmailURL, '_blank');
   };
 
   if (cart.length === 0) {
@@ -49,7 +51,13 @@ Thank you for your assistance.`;
         </div>
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Quote List is Empty</h2>
         <p className="text-gray-600 mb-8 max-w-md">Add products to your quote list to request pricing from our team.</p>
-        <Link href="/products" className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-8 rounded-lg transition-all hover:scale-105">
+        <Link 
+          href="/products" 
+          className="text-white font-bold py-3 px-8 rounded-lg transition-all hover:scale-105"
+          style={{ backgroundColor: '#00afef' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0099d6'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#00afef'}
+        >
           Browse Catalog
         </Link>
       </div>

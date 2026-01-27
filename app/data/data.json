@@ -1,0 +1,455 @@
+{
+    "categories": [
+        {
+            "slug": "beauty-instruments",
+            "name": "Beauty Instruments",
+            "image": "/components/Cuticle Nipper/1/Untitled-2.jpg",
+            "description": "Professional-grade beauty and cosmetic instruments",
+            "subcategories": [
+                {
+                    "slug": "cuticle-nippers",
+                    "name": "Cuticle Nippers",
+                    "image": "/components/Cuticle Nipper/1/Untitled-2.jpg",
+                    "description": "Surgical-grade stainless steel cuticle nippers",
+                    "products": [
+                        {
+                            "id": "BI-CN-001",
+                            "sku": "BI-CN-001",
+                            "name": "Pro Cuticle Nipper - Single Spring",
+                            "price": "Market Rate",
+                            "description": "Professional grade stainless steel cuticle nipper with single spring action for precise trimming.",
+                            "image": "/components/Cuticle Nipper/1/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Professional grade stainless steel cuticle nipper with single spring action for precise trimming.",
+                                "specifications": {
+                                    "Material": "Surgical Grade Stainless Steel",
+                                    "Finish": "Satin",
+                                    "Length": "12cm",
+                                    "Weight": "50g"
+                                },
+                                "features": [
+                                    "Single Spring Action",
+                                    "Sharp Blades",
+                                    "Ergonomic Grip"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "BI-CN-002",
+                            "sku": "BI-CN-002",
+                            "name": "Gold Plated Cuticle Nipper",
+                            "price": "Market Rate",
+                            "description": "Premium gold plated cuticle nipper offering durability and a luxurious feel.",
+                            "image": "/components/Cuticle Nipper/2/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Premium gold plated cuticle nipper offering durability and a luxurious feel.",
+                                "specifications": {
+                                    "Material": "Stainless Steel",
+                                    "Finish": "Gold Plated",
+                                    "Length": "12cm",
+                                    "Weight": "55g"
+                                },
+                                "features": [
+                                    "Gold Plating",
+                                    "Durable Construction",
+                                    "Luxury Design"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "BI-CN-003",
+                            "sku": "BI-CN-003",
+                            "name": "Satin Finish Cuticle Nipper",
+                            "price": "Market Rate",
+                            "description": "Ergonomic satin finish nipper designed for comfort during extended use.",
+                            "image": "/components/Cuticle Nipper/3/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Ergonomic satin finish nipper designed for comfort during extended use.",
+                                "specifications": {
+                                    "Material": "Stainless Steel",
+                                    "Finish": "Satin",
+                                    "Length": "11.5cm",
+                                    "Weight": "48g"
+                                },
+                                "features": [
+                                    "Satin Finish",
+                                    "Comfort Grip",
+                                    "Precise Cutting"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "slug": "nail-cutters",
+                    "name": "Nail Cutters",
+                    "image": "/components/Acrylic Nail Cutter/1/Untitled-2.jpg",
+                    "description": "Professional nail cutting instruments",
+                    "products": [
+                        {
+                            "id": "BI-NC-001",
+                            "sku": "BI-NC-001",
+                            "name": "Heavy Duty Nail Cutter",
+                            "price": "Market Rate",
+                            "description": "Strong and sharp nail cutter suitable for thick nails and professional pedicures.",
+                            "image": "/components/Acrylic Nail Cutter/1/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Strong and sharp nail cutter suitable for thick nails and professional pedicures.",
+                                "specifications": {
+                                    "Material": "Stainless Steel",
+                                    "Type": "Heavy Duty",
+                                    "Size": "Large"
+                                },
+                                "features": [
+                                    "Heavy Duty Spring",
+                                    "Sharp Jaws",
+                                    "Locking Mechanism"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "BI-NC-002",
+                            "sku": "BI-NC-002",
+                            "name": "Acrylic Nail Tip Cutter",
+                            "price": "Market Rate",
+                            "description": "Specialized cutter for precise trimming of acrylic nail tips.",
+                            "image": "/components/Acrylic Nail Cutter/2/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Specialized cutter for precise trimming of acrylic nail tips.",
+                                "specifications": {
+                                    "Material": "Stainless Steel",
+                                    "Usage": "Acrylic Nails",
+                                    "Color": "Silver"
+                                },
+                                "features": [
+                                    "Adjustable Blade",
+                                    "Clean Cuts",
+                                    "Easy to Use"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "slug": "eyebrow-tweezers",
+                    "name": "Eyebrow Tweezers",
+                    "image": "/components/Eyebrow Tweezers/1/Untitled-1.jpg",
+                    "description": "Precision eyebrow shaping tools",
+                    "products": [
+                        {
+                            "id": "BI-ET-001",
+                            "sku": "BI-ET-001",
+                            "name": "Slant Tip Eyebrow Tweezer",
+                            "price": "Market Rate",
+                            "description": "Classic slant tip tweezer for general eyebrow shaping and maintenance.",
+                            "image": "/components/Eyebrow Tweezers/1/Untitled-1.jpg",
+                            "details": {
+                                "overview": "Classic slant tip tweezer for general eyebrow shaping and maintenance.",
+                                "specifications": {
+                                    "Material": "Stainless Steel",
+                                    "Tip Type": "Slant",
+                                    "Length": "9cm"
+                                },
+                                "features": [
+                                    "Hand Filed Tips",
+                                    "Perfet Alignment",
+                                    "Classic Design"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "BI-ET-002",
+                            "sku": "BI-ET-002",
+                            "name": "Pointed Precision Tweezer",
+                            "price": "Market Rate",
+                            "description": "Ultra-fine pointed tip for removing ingrown hairs and fine splinters.",
+                            "image": "/components/Eyebrow Tweezers/2/Untitled-1.jpg",
+                            "details": {
+                                "overview": "Ultra-fine pointed tip for removing ingrown hairs and fine splinters.",
+                                "specifications": {
+                                    "Material": "Stainless Steel",
+                                    "Tip Type": "Pointed",
+                                    "Length": "9.5cm"
+                                },
+                                "features": [
+                                    "Needle Point Tips",
+                                    "Surgical Precision",
+                                    "Anti-Magnetic"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "slug": "eyelash-tweezers",
+                    "name": "Eyelash Tweezers",
+                    "image": "/components/Eyelash Tweezers/1/Untitled-1.jpg",
+                    "description": "Professional lash application instruments",
+                    "products": [
+                        {
+                            "id": "BI-LT-001",
+                            "sku": "BI-LT-001",
+                            "name": "Volume Lash Tweezer - Curved",
+                            "price": "Market Rate",
+                            "description": "Curved tip tweezer ideal for creating volume fans in eyelash extensions.",
+                            "image": "/components/Eyelash Tweezers/1/Untitled-1.jpg",
+                            "details": {
+                                "overview": "Curved tip tweezer ideal for creating volume fans in eyelash extensions.",
+                                "specifications": {
+                                    "Material": "Stainless Steel",
+                                    "Tip Type": "Volume Curved",
+                                    "Weight": "15g"
+                                },
+                                "features": [
+                                    "Lightweight",
+                                    "Perfect Closure",
+                                    "Volume Lash Specialized"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "BI-LT-002",
+                            "sku": "BI-LT-002",
+                            "name": "Isolation Lash Tweezer - Straight",
+                            "price": "Market Rate",
+                            "description": "Straight fine tip tweezer for isolating natural lashes during application.",
+                            "image": "/components/Eyelash Tweezers/2/Untitled-1.jpg",
+                            "details": {
+                                "overview": "Straight fine tip tweezer for isolating natural lashes during application.",
+                                "specifications": {
+                                    "Material": "Stainless Steel",
+                                    "Tip Type": "Straight Isolation",
+                                    "Length": "12cm"
+                                },
+                                "features": [
+                                    "Fine Tips",
+                                    "Isolation Specialized",
+                                    "Anti-Static"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "slug": "medical-instruments",
+            "name": "Medical Instruments",
+            "image": "/components/Con Cutter/1/Untitled-2.jpg",
+            "description": "Medical-grade surgical instruments",
+            "subcategories": [
+                {
+                    "slug": "surgical-scissors",
+                    "name": "Surgical Scissors",
+                    "image": "/components/Cuticle Nipper/1/Untitled-2.jpg",
+                    "description": "Precision surgical cutting instruments",
+                    "products": [
+                        {
+                            "id": "MI-SS-001",
+                            "sku": "MI-SS-001",
+                            "name": "Operating Scissors - Sharp/Blunt",
+                            "price": "Market Rate",
+                            "description": "Standard operating scissors with one sharp and one blunt tip for versatility.",
+                            "image": "/components/Con Cutter/1/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Standard operating scissors with one sharp and one blunt tip for versatility.",
+                                "specifications": {
+                                    "Material": "Surgical Stainless Steel",
+                                    "Type": "Sharp/Blunt",
+                                    "Length": "14cm"
+                                },
+                                "features": [
+                                    "Sharp/Blunt Tips",
+                                    "Versatile Use",
+                                    "Autoclavable"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "slug": "forceps",
+                    "name": "Forceps",
+                    "image": "/components/Eyebrow Tweezers/1/Untitled-1.jpg",
+                    "description": "Medical-grade forceps and clamps",
+                    "products": [
+                        {
+                            "id": "MI-FO-001",
+                            "sku": "MI-FO-001",
+                            "name": "Hemostatic Forceps - Curved",
+                            "price": "Market Rate",
+                            "description": "Locking forceps for controlling bleeding and clamping blood vessels.",
+                            "image": "/components/Con Cutter/2/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Locking forceps for controlling bleeding and clamping blood vessels.",
+                                "specifications": {
+                                    "Material": "Surgical Stainless Steel",
+                                    "Type": "Hemostatic Curved",
+                                    "Length": "14cm"
+                                },
+                                "features": [
+                                    "Locking Mechanism",
+                                    "Curved Jaws",
+                                    "Serrated Grip"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "slug": "scalpels",
+                    "name": "Scalpels",
+                    "image": "/components/Con Cutter/1/Untitled-2.jpg",
+                    "description": "Surgical scalpels and blades",
+                    "products": []
+                }
+            ]
+        },
+        {
+            "slug": "industrial-tools",
+            "name": "Industrial Tools",
+            "image": "/components/Con Cutter/1/Untitled-2.jpg",
+            "description": "Heavy-duty industrial equipment",
+            "subcategories": [
+                {
+                    "slug": "hammers-mallets",
+                    "name": "Hammers & Mallets",
+                    "image": "/components/Acrylic Nail Cutter/1/Untitled-2.jpg",
+                    "description": "Industrial hammers and mallets",
+                    "products": [
+                        {
+                            "id": "IT-HM-001",
+                            "sku": "IT-HM-001",
+                            "name": "Brass Mallet",
+                            "price": "Market Rate",
+                            "description": "Non-sparking brass mallet for delicate industrial assembly work.",
+                            "image": "/components/Acrylic Nail Cutter/3/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Non-sparking brass mallet for delicate industrial assembly work.",
+                                "specifications": {
+                                    "Head Material": "Brass",
+                                    "Handle": "Wood/Fiberglass",
+                                    "Weight": "1lb"
+                                },
+                                "features": [
+                                    "Non-sparking",
+                                    "Replaceable Faces",
+                                    "Shock Absorbing"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "slug": "pliers",
+                    "name": "Pliers",
+                    "image": "/components/Cuticle Nipper/1/Untitled-2.jpg",
+                    "description": "Professional-grade pliers",
+                    "products": [
+                        {
+                            "id": "IT-PL-001",
+                            "sku": "IT-PL-001",
+                            "name": "Combination Pliers - Heavy Duty",
+                            "price": "Market Rate",
+                            "description": "Rugged combination pliers with high-leverage design for cutting and gripping.",
+                            "image": "/components/Cuticle Nipper/1/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Rugged combination pliers with high-leverage design for cutting and gripping.",
+                                "specifications": {
+                                    "Material": "Chrome Vanadium Steel",
+                                    "Type": "Combination",
+                                    "Size": "8 inch"
+                                },
+                                "features": [
+                                    "High Leverage",
+                                    "Induction Hardened Edges",
+                                    "Comfort Grip"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "slug": "cutting-tools",
+                    "name": "Cutting Tools",
+                    "image": "/components/Con Cutter/1/Untitled-2.jpg",
+                    "description": "Industrial cutting instruments",
+                    "products": []
+                }
+            ]
+        },
+        {
+            "slug": "jewelry-tools",
+            "name": "Jewelry Tools",
+            "image": "/components/Eyebrow Tweezers/1/Untitled-1.jpg",
+            "description": "Precision instruments for jewelry making",
+            "subcategories": [
+                {
+                    "slug": "jewelry-pliers",
+                    "name": "Jewelry Pliers",
+                    "image": "/components/Eyebrow Tweezers/1/Untitled-1.jpg",
+                    "description": "Fine-tip jewelry pliers",
+                    "products": [
+                        {
+                            "id": "JT-JP-001",
+                            "sku": "JT-JP-001",
+                            "name": "Round Nose Jewelry Pliers",
+                            "price": "Market Rate",
+                            "description": "Essential pliers for forming loops and bends in wire for jewelry making.",
+                            "image": "/components/Eyebrow Tweezers/3/Untitled-1.jpg",
+                            "details": {
+                                "overview": "Essential pliers for forming loops and bends in wire for jewelry making.",
+                                "specifications": {
+                                    "Material": "Stainless Steel",
+                                    "Nose Type": "Round",
+                                    "Length": "5 inch"
+                                },
+                                "features": [
+                                    "Box Joint Construction",
+                                    "Double Leaf Spring",
+                                    "Smooth Jaws"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "slug": "jewelry-saws",
+                    "name": "Jewelry Saws",
+                    "image": "/components/Con Cutter/1/Untitled-2.jpg",
+                    "description": "Precision cutting saws",
+                    "products": [
+                        {
+                            "id": "JT-JS-001",
+                            "sku": "JT-JS-001",
+                            "name": "Adjustable Jewelers Saw Frame",
+                            "price": "Market Rate",
+                            "description": "Precision saw frame for detailed cutting of metal sheets.",
+                            "image": "/components/Con Cutter/3/Untitled-2.jpg",
+                            "details": {
+                                "overview": "Precision saw frame for detailed cutting of metal sheets.",
+                                "specifications": {
+                                    "Throat Depth": "3 inch",
+                                    "Adjustable Length": "Yes",
+                                    "Handle": "Wood"
+                                },
+                                "features": [
+                                    "Adjustable Tension",
+                                    "Durable Frame",
+                                    "Ergonomic Handle"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "slug": "files-burrs",
+                    "name": "Files & Burrs",
+                    "image": "/components/Cuticle Nipper/1/Untitled-2.jpg",
+                    "description": "Filing and finishing tools",
+                    "products": []
+                }
+            ]
+        }
+    ]
+}

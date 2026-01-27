@@ -3,17 +3,85 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../context/CartContext';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
 import { categoriesData } from '../data/categories';
+import { products } from '../data/products';
 
 export default function Navbar() {
   const { getCartCount, getCartTotal } = useCart();
   const pathname = usePathname();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCategory, setSearchCategory] = useState('All');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [dropdownResults, setDropdownResults] = useState([]);
+  const searchRef = useRef(null);
 
   const isActive = (path) => pathname === path;
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setShowDropdown(false);
+      const params = new URLSearchParams();
+      params.set('q', searchQuery.trim());
+      if (searchCategory !== 'All') {
+        params.set('category', searchCategory);
+      }
+      router.push(`/search?${params.toString()}`);
+    }
+  };
+
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
+  };
+
+  // Live search as user types
+  useEffect(() => {
+    if (searchQuery.trim().length > 1) {
+      const searchTerm = searchQuery.toLowerCase();
+      const results = products.filter(product => {
+        const matchesCategory = searchCategory === 'All' || 
+          product.category?.toLowerCase() === searchCategory.toLowerCase() ||
+          product.subcategory?.toLowerCase() === searchCategory.toLowerCase();
+
+        const matchesQuery = 
+          product.name?.toLowerCase().includes(searchTerm) ||
+          product.description?.toLowerCase().includes(searchTerm) ||
+          product.id?.toLowerCase().includes(searchTerm) ||
+          product.sku?.toLowerCase().includes(searchTerm);
+
+        return matchesCategory && matchesQuery;
+      }).slice(0, 6); // Limit to 6 results in dropdown
+
+      setDropdownResults(results);
+      setShowDropdown(true);
+    } else {
+      setDropdownResults([]);
+      setShowDropdown(false);
+    }
+  }, [searchQuery, searchCategory]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleProductClick = (productId) => {
+    setShowDropdown(false);
+    setSearchQuery('');
+    router.push(`/products/${productId}`);
+  };
 
   const productCategories = Object.keys(categoriesData).map(slug => ({
     name: categoriesData[slug].name,
@@ -23,6 +91,9 @@ export default function Navbar() {
       href: `/categories/${slug}/${subSlug}`
     }))
   }));
+
+  // Get all categories for search dropdown
+  const allCategories = Object.keys(categoriesData).map(slug => categoriesData[slug].name);
 
   return (
     <header className="fixed top-0 w-full z-50 bg-white shadow-md">
@@ -92,7 +163,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-20 gap-8">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
-              <div className="relative h-14 w-40">
+              <div className="relative h-24 w-52">
                 <Image 
                   src="/ZetaToolsMainLogo.svg" 
                   alt="ZetaToolz Logo" 
@@ -103,9 +174,9 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* Central Search Bar */}
-            <div className="flex-1 max-w-3xl">
-              <div className="flex items-stretch">
+            {/* Central Search Bar with Dropdown */}
+            <div className="flex-1 max-w-3xl relative" ref={searchRef}>
+              <form onSubmit={handleSearch} className="flex items-stretch">
                 {/* Category Dropdown */}
                 <div className="relative">
                   <select 
@@ -114,9 +185,9 @@ export default function Navbar() {
                     className="h-full px-4 pr-8 bg-gray-50 border border-r-0 border-gray-300 rounded-l-lg text-sm focus:outline-none focus:border-blue-500 appearance-none cursor-pointer"
                   >
                     <option>All</option>
-                    <option>Beauty Instruments</option>
-                    <option>Hammer & Mallets</option>
-                    <option>Eyelash Tweezers</option>
+                    {allCategories.map(cat => (
+                      <option key={cat}>{cat}</option>
+                    ))}
                   </select>
                   <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -129,16 +200,84 @@ export default function Navbar() {
                   placeholder="Search for products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleSearchKeyPress}
+                  onFocus={() => searchQuery.trim().length > 1 && setShowDropdown(true)}
                   className="flex-1 px-4 py-2.5 border-t border-b border-gray-300 focus:outline-none focus:border-blue-500 text-sm"
                 />
 
                 {/* Search Button */}
-                <button className="px-6 bg-cyan-600 hover:bg-cyan-700 text-white rounded-r-lg transition flex items-center justify-center">
+                <button 
+                  type="submit"
+                  className="px-6 text-white rounded-r-lg transition flex items-center justify-center"
+                  style={{ backgroundColor: '#00afef' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0099d6'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#00afef'}
+                >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </button>
-              </div>
+              </form>
+
+              {/* Live Search Dropdown */}
+              {showDropdown && dropdownResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-2xl z-50 max-h-[500px] overflow-y-auto">
+                  <div className="p-2">
+                    {dropdownResults.map((product) => (
+                      <button
+                        key={product.id}
+                        onClick={() => handleProductClick(product.id)}
+                        className="w-full flex items-center gap-4 p-3 hover:bg-gray-50 rounded-lg transition group text-left"
+                      >
+                        {/* Product Image */}
+                        <div className="flex-shrink-0 w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
+                          <img
+                            src={product.image || 'https://placehold.co/100x100/f3f4f6/6b7280?text=' + encodeURIComponent(product.name)}
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            onError={(e) => {
+                              e.target.src = 'https://placehold.co/100x100/f3f4f6/6b7280?text=No+Image';
+                            }}
+                          />
+                        </div>
+
+                        {/* Product Info */}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-gray-900 group-hover:text-cyan-600 transition line-clamp-1 mb-1">
+                            {product.name}
+                          </h4>
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span className="bg-gray-100 px-2 py-0.5 rounded">ID: {product.id}</span>
+                            {product.category && (
+                              <span className="text-gray-400">• {product.category}</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Arrow Icon */}
+                        <svg className="w-5 h-5 text-gray-400 group-hover:text-cyan-600 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* View All Results Footer */}
+                  {searchQuery && (
+                    <div className="border-t border-gray-200 p-3 bg-gray-50">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSearch(e);
+                        }}
+                        className="w-full text-center font-medium text-cyan-600 hover:text-cyan-700 transition text-sm py-2"
+                      >
+                        View all results for "{searchQuery}" →
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* User Action Icons */}
@@ -180,7 +319,10 @@ export default function Navbar() {
               {/* All Categories */}
               <Link 
                 href="/categories" 
-                className="px-4 py-2 text-sm font-medium bg-cyan-600 text-white hover:bg-cyan-700 rounded transition flex items-center gap-2"
+                className="px-4 py-2 text-sm font-medium text-white rounded transition flex items-center gap-2"
+                style={{ backgroundColor: '#00afef' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0099d6'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#00afef'}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -235,7 +377,13 @@ export default function Navbar() {
               </div>
 
               {/* Shopping Cart */}
-              <Link href="/cart" className={`flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded transition ${getCartCount() > 0 ? 'px-4 py-2' : 'p-3'}`}>
+              <Link 
+                href="/cart" 
+                className={`flex items-center gap-2 text-white rounded transition ${getCartCount() > 0 ? 'px-4 py-2' : 'p-3'}`}
+                style={{ backgroundColor: '#00afef' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0099d6'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#00afef'}
+              >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>

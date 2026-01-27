@@ -25,59 +25,7 @@ export default function ProductsPage() {
   }
 
   const { category, subcategory } = categoryInfo;
-
-  // Sample products for this subcategory
-  // In production, you would fetch these from a database based on the subcategory
-  const products = [
-    {
-      id: `${subcategorySlug}-1`,
-      sku: `ZT-${subcategorySlug.substring(0, 3).toUpperCase()}-001`,
-      name: `Professional ${subcategory.name} - Basic`,
-      description: `High-quality surgical-grade ${subcategory.name.toLowerCase()} for professional use`,
-      category: subcategory.name,
-      image: subcategory.image,
-    },
-    {
-      id: `${subcategorySlug}-2`,
-      sku: `ZT-${subcategorySlug.substring(0, 3).toUpperCase()}-002`,
-      name: `Premium ${subcategory.name} - Pro`,
-      description: `ISO certified precision ${subcategory.name.toLowerCase()} with ergonomic design`,
-      category: subcategory.name,
-      image: subcategory.image,
-    },
-    {
-      id: `${subcategorySlug}-3`,
-      sku: `ZT-${subcategorySlug.substring(0, 3).toUpperCase()}-003`,
-      name: `Elite ${subcategory.name} - Master`,
-      description: `Advanced ${subcategory.name.toLowerCase()} with superior craftsmanship`,
-      category: subcategory.name,
-      image: subcategory.image,
-    },
-    {
-      id: `${subcategorySlug}-4`,
-      sku: `ZT-${subcategorySlug.substring(0, 3).toUpperCase()}-004`,
-      name: `Industrial ${subcategory.name} - Heavy Duty`,
-      description: `Heavy-duty ${subcategory.name.toLowerCase()} for industrial applications`,
-      category: subcategory.name,
-      image: subcategory.image,
-    },
-    {
-      id: `${subcategorySlug}-5`,
-      sku: `ZT-${subcategorySlug.substring(0, 3).toUpperCase()}-005`,
-      name: `Compact ${subcategory.name} - Mini`,
-      description: `Compact precision ${subcategory.name.toLowerCase()} for detailed work`,
-      category: subcategory.name,
-      image: subcategory.image,
-    },
-    {
-      id: `${subcategorySlug}-6`,
-      sku: `ZT-${subcategorySlug.substring(0, 3).toUpperCase()}-006`,
-      name: `Deluxe ${subcategory.name} Set`,
-      description: `Complete set of ${subcategory.name.toLowerCase()} with carrying case`,
-      category: subcategory.name,
-      image: subcategory.image,
-    },
-  ];
+  const products = subcategory.products || [];
 
   return (
     <div className="animate-fade-in">
@@ -108,12 +56,7 @@ export default function ProductsPage() {
             </svg>
             <span className="text-gray-700">ISO 9001 & CE Certified</span>
           </div>
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="text-gray-700">Market Rates Updated Daily</span>
-          </div>
+         
         </div>
       </div>
 
@@ -151,7 +94,7 @@ export default function ProductsPage() {
           Contact our sales team for bulk orders, custom requirements, or current market pricing
         </p>
         <a 
-          href="mailto:sales@zetatoolz.com?subject=Quote Request for {subcategory.name}"
+          href={`mailto:sales@zetatoolz.com?subject=Quote Request for ${subcategory.name}`}
           className="inline-flex items-center gap-2 bg-white text-cyan-600 font-bold py-3 px-8 rounded-lg hover:bg-cyan-50 transition"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
