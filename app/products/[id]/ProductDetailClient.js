@@ -9,10 +9,12 @@ export default function ProductDetailClient({ id }) {
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     // Find product by ID
-    const foundProduct = products.find(p => p.id === id || p.sku === id);
+    const foundProduct = products.find(p => p.id === id);
     setProduct(foundProduct);
   }, [id]);
 
@@ -29,7 +31,7 @@ export default function ProductDetailClient({ id }) {
     const subject = `Inquiry: Purchase Request for ${product.name}`;
     const body = `Hello,
 
-I am interested in purchasing the ${product.name} (SKU: ${product.sku || product.id}).
+I am interested in purchasing the ${product.name}.
 
 Please provide the current market price for today, ${today}.
 
@@ -39,6 +41,13 @@ Thank you.`;
     const gmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent('xeedemo1@gmail.com')}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
     window.open(gmailURL, '_blank');
+  };
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setZoomPosition({ x, y });
   };
 
   if (!product) {
@@ -90,16 +99,35 @@ Thank you.`;
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Left Column - Product Images */}
           <div className="space-y-4">
-            {/* Main Image */}
-            <div className="aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-xl border-2 border-gray-200">
+            {/* Main Image with Zoom */}
+            <div 
+              className="aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-xl border-2 border-gray-200 relative cursor-zoom-in group"
+              onMouseMove={handleMouseMove}
+              onMouseEnter={() => setIsZoomed(true)}
+              onMouseLeave={() => setIsZoomed(false)}
+            >
               <img
                 src={imageGallery[selectedImage]}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-200 ease-out"
+                style={{
+                  transform: isZoomed ? 'scale(2)' : 'scale(1)',
+                  transformOrigin: isZoomed ? `${zoomPosition.x}% ${zoomPosition.y}%` : 'center'
+                }}
                 onError={(e) => {
                   e.target.src = 'https://placehold.co/800x800/f3f4f6/6b7280?text=' + encodeURIComponent(product.name);
                 }}
               />
+              
+              {/* Zoom indicator */}
+              {isZoomed && (
+                <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 z-10">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                  </svg>
+                  Zoomed 2x
+                </div>
+              )}
             </div>
 
             {/* Image Thumbnails */}
@@ -144,17 +172,11 @@ Thank you.`;
               {product.name}
             </h1>
 
-            {/* Product SKU/ID */}
+            {/* Product ID */}
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-gray-500 font-medium">SKU:</span>
-                <span className="text-gray-900 font-bold bg-gray-100 px-3 py-1 rounded-md">
-                  {product.sku || product.id}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
                 <span className="text-gray-500 font-medium">Product ID:</span>
-                <span className="text-gray-900 font-semibold">{product.id}</span>
+                <span className="text-gray-900 font-bold bg-gray-100 px-3 py-1 rounded-md">{product.id}</span>
               </div>
             </div>
 

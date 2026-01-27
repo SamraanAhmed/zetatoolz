@@ -7,8 +7,8 @@ export function generateStaticParams() {
   }));
 }
 
-export default function SubcategoriesPage({ params }) {
-  const { category } = params;
+export default async function SubcategoriesPage({ params }) {
+  const { category } = await params;
   
   return <SubcategoriesPageClient categorySlug={category} />;
 }

@@ -17,8 +17,8 @@ export function generateStaticParams() {
   return params;
 }
 
-export default function ProductsPage({ params }) {
-  const { category, subcategory } = params;
+export default async function ProductsPage({ params }) {
+  const { category, subcategory } = await params;
   
   return <ProductsPageClient categorySlug={category} subcategorySlug={subcategory} />;
 }

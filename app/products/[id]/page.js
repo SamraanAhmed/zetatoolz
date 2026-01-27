@@ -7,8 +7,8 @@ export function generateStaticParams() {
   }));
 }
 
-export default function ProductDetailPage({ params }) {
-  const { id } = params;
+export default async function ProductDetailPage({ params }) {
+  const { id } = await params;
   
   return <ProductDetailClient id={id} />;
 }

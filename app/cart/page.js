@@ -82,7 +82,7 @@ Thank you for your assistance.`;
               
               <div className="flex-1 w-full text-center sm:text-left">
                 <h3 className="text-lg font-bold text-gray-900 mb-1">{item.name}</h3>
-                <p className="text-gray-500 text-sm mb-2">SKU: {item.sku || item.id}</p>
+
 
               </div>
 

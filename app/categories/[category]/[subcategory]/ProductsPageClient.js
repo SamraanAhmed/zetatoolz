@@ -6,7 +6,13 @@ import ProductCard from '../../../components/ProductCard';
 import Breadcrumb from '../../../components/Breadcrumb';
 
 export default function ProductsPageClient({ categorySlug, subcategorySlug }) {
+  console.log('ProductsPageClient - categorySlug:', categorySlug);
+  console.log('ProductsPageClient - subcategorySlug:', subcategorySlug);
+  
   const categoryInfo = getCategoryInfo(categorySlug, subcategorySlug);
+  
+  console.log('ProductsPageClient - categoryInfo:', categoryInfo);
+  console.log('ProductsPageClient - products:', categoryInfo?.subcategory?.products);
 
   if (!categoryInfo) {
     return (
@@ -21,6 +27,8 @@ export default function ProductsPageClient({ categorySlug, subcategorySlug }) {
 
   const { category, subcategory } = categoryInfo;
   const products = subcategory.products || [];
+  
+  console.log('ProductsPageClient - final products array:', products, 'length:', products.length);
 
   return (
     <div className="animate-fade-in">

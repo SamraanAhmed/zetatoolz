@@ -17,7 +17,7 @@ export default function ProductCard({ product }) {
     const subject = `Inquiry: Purchase Request for ${product.name}`;
     const body = `Hello,
 
-I am interested in purchasing the ${product.name} (SKU: ${product.sku || product.id}).
+I am interested in purchasing the ${product.name}.
 
 Please provide the current market price for today, ${today}.
 
