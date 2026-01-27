@@ -54,6 +54,8 @@ export default function Home() {
     const timer = setInterval(nextSlide, 5000);
     return () => clearInterval(timer);
   }, []);
+ 
+
 
   return (
     <div className="space-y-12 md:space-y-20">
@@ -83,7 +85,7 @@ export default function Home() {
               href={slides[currentSlide].viewAllLink}
               className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium tracking-wide mt-2 sm:mt-4 border-b border-white/30 hover:border-white pb-1 transition-all text-sm sm:text-base"
             >
-              View All Subcategories
+              View All Sub-categories
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
