@@ -64,12 +64,10 @@ Thank you.`;
     );
   }
 
-  // Dummy image gallery (in real scenario, products would have multiple images)
-  const imageGallery = [
-    product.image || 'https://placehold.co/800x800/f3f4f6/6b7280?text=' + encodeURIComponent(product.name),
-    product.image || 'https://placehold.co/800x800/f3f4f6/6b7280?text=' + encodeURIComponent(product.name),
-    product.image || 'https://placehold.co/800x800/f3f4f6/6b7280?text=' + encodeURIComponent(product.name),
-  ];
+  // Use product images if available, otherwise use single image
+  const imageGallery = product.images && product.images.length > 0 
+    ? product.images 
+    : [product.image || 'https://placehold.co/800x800/f3f4f6/6b7280?text=' + encodeURIComponent(product.name)];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
