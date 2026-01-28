@@ -10,6 +10,17 @@ import { categoriesData } from './data/categories';
 export default function Home() {
   const featuredProducts = products.slice(0, 3);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize(); // Check on mount
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Build slides dynamically from categories data - MEGA CATEGORY SWITCHER
   const slides = Object.keys(categoriesData).map(categorySlug => {
@@ -65,7 +76,7 @@ export default function Home() {
         <div 
           className="absolute inset-0 transition-colors duration-700"
           style={{
-            background: window.innerWidth < 768 
+            background: isMobile 
               ? slides[currentSlide].bgColor 
               : `linear-gradient(135deg, ${slides[currentSlide].bgColor} 0%, ${slides[currentSlide].bgColor} 58%, #ffffff 58%, #ffffff 100%)`
           }}
