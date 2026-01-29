@@ -16,6 +16,8 @@ export default function Navbar() {
   const [searchCategory, setSearchCategory] = useState('All');
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownResults, setDropdownResults] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const searchRef = useRef(null);
 
   const isActive = (path) => pathname === path;
@@ -160,10 +162,10 @@ export default function Navbar() {
       {/* 2. Primary Brand & Search Tier */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 gap-8">
+          <div className="flex items-center justify-between h-20 gap-4">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
-              <div className="relative h-24 w-52">
+              <div className="relative h-16 w-40 sm:h-24 sm:w-52">
                 <Image 
                   src="/ZetaToolsMainLogo.svg" 
                   alt="ZetaToolz Logo" 
@@ -174,9 +176,9 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* Central Search Bar with Dropdown */}
-            <div className="flex-1 max-w-3xl relative" ref={searchRef}>
-              <form onSubmit={handleSearch} className="flex items-stretch">
+            {/* Central Search Bar with Dropdown (Hidden on mobile) */}
+            <div className="hidden md:flex flex-1 max-w-3xl relative" ref={searchRef}>
+              <form onSubmit={handleSearch} className="flex items-stretch w-full">
                 {/* Category Dropdown */}
                 <div className="relative">
                   <select 
@@ -280,7 +282,48 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* User Action Icons */}
+            {/* Mobile Actions: Search Button & Cart (Tablet and Mobile) */}
+            <div className="flex lg:hidden items-center gap-3">
+              {/* Mobile Search Button */}
+              <button
+                onClick={() => setMobileSearchOpen(true)}
+                className="md:hidden p-2 text-gray-600 hover:text-cyan-600 transition"
+                aria-label="Search"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+
+              {/* Mobile Cart */}
+              <Link 
+                href="/cart" 
+                className="relative p-2 text-white rounded transition"
+                style={{ backgroundColor: '#00afef' }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                {getCartCount() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    {getCartCount()}
+                  </span>
+                )}
+              </Link>
+
+              {/* Hamburger Menu Button (Tablet and Mobile) */}
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-2 text-gray-600 hover:text-cyan-600 transition"
+                aria-label="Open menu"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+
+            {/* User Action Icons (Desktop only) */}
             <div className="hidden lg:flex items-center gap-6">
               {/* Account */}
               <Link href="/account" className="flex flex-col items-center group">
@@ -290,28 +333,37 @@ export default function Navbar() {
                 <span className="text-xs text-gray-600 group-hover:text-cyan-600 transition mt-1">Account</span>
               </Link>
 
-              {/* Wishlist */}
-              <Link href="/wishlist" className="flex flex-col items-center group relative">
+              {/* About Us */}
+              <Link href="/about" className="flex flex-col items-center group">
                 <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span className="text-xs text-gray-600 group-hover:text-cyan-600 transition mt-1">Wishlist</span>
+                <span className="text-xs text-gray-600 group-hover:text-cyan-600 transition mt-1">About Us</span>
               </Link>
 
-              {/* Compare */}
-              <Link href="/compare" className="flex flex-col items-center group">
+              {/* Contact */}
+              <Link href="/contact" className="flex flex-col items-center group">
                 <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="text-xs text-gray-600 group-hover:text-cyan-600 transition mt-1">Compare</span>
+                <span className="text-xs text-gray-600 group-hover:text-cyan-600 transition mt-1">Contact</span>
               </Link>
+
+              {/* FAQ */}
+              <Link href="/faq" className="flex flex-col items-center group">
+                <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-xs text-gray-600 group-hover:text-cyan-600 transition mt-1">FAQ</span>
+              </Link>
+              
             </div>
           </div>
         </div>
       </div>
 
-      {/* 3. Main Navigation & Cart Tier */}
-      <div className="bg-white border-b border-gray-200">
+      {/* 3. Main Navigation & Cart Tier (Desktop Only) */}
+      <div className="hidden md:block bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-12">
             {/* Left: Category Navigation */}
@@ -367,14 +419,8 @@ export default function Navbar() {
               ))}
             </nav>
 
-            {/* Right: Secondary Links & Cart */}
+            {/* Right: Cart */}
             <div className="flex items-center gap-6">
-              {/* Secondary Links */}
-              <div className="hidden md:flex items-center gap-4">
-                <Link href="/about" className="text-sm text-gray-700 hover:text-cyan-600 transition">About Us</Link>
-                <Link href="/contact" className="text-sm text-gray-700 hover:text-cyan-600 transition">Contact</Link>
-                <Link href="/faq" className="text-sm text-gray-700 hover:text-cyan-600 transition">FAQ</Link>
-              </div>
 
               {/* Shopping Cart */}
               <Link 
@@ -395,6 +441,232 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Sidebar Menu (Tablet & Mobile) */}
+      {sidebarOpen && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-[60] lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+          
+          {/* Sidebar */}
+          <div className="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-[61] lg:hidden transform transition-transform duration-300 ease-in-out overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-bold text-gray-900">Menu</h2>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-2 text-gray-600 hover:text-cyan-600 transition rounded-lg hover:bg-gray-100"
+                aria-label="Close menu"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Menu Items */}
+            <nav className="p-4">
+              <div className="space-y-2">
+                {/* Account */}
+                <Link 
+                  href="/account" 
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-cyan-50 transition group"
+                >
+                  <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <span className="font-medium text-gray-900 group-hover:text-cyan-600">Account</span>
+                </Link>
+
+                {/* About Us */}
+                <Link 
+                  href="/about" 
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-cyan-50 transition group"
+                >
+                  <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-medium text-gray-900 group-hover:text-cyan-600">About Us</span>
+                </Link>
+
+                {/* Contact */}
+                <Link 
+                  href="/contact" 
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-cyan-50 transition group"
+                >
+                  <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="font-medium text-gray-900 group-hover:text-cyan-600">Contact</span>
+                </Link>
+
+                {/* FAQ */}
+                <Link 
+                  href="/faq" 
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-cyan-50 transition group"
+                >
+                  <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-medium text-gray-900 group-hover:text-cyan-600">FAQ</span>
+                </Link>
+
+                {/* Divider */}
+                <div className="border-t border-gray-200 my-4" />
+
+                {/* Categories */}
+                <Link 
+                  href="/categories" 
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-cyan-50 transition group"
+                >
+                  <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
+                  <span className="font-medium text-gray-900 group-hover:text-cyan-600">All Categories</span>
+                </Link>
+
+                {/* Cart */}
+                <Link 
+                  href="/cart" 
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-cyan-50 transition group"
+                >
+                  <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span className="font-medium text-gray-900 group-hover:text-cyan-600">
+                    Cart {getCartCount() > 0 && `(${getCartCount()})`}
+                  </span>
+                </Link>
+              </div>
+            </nav>
+          </div>
+        </>
+      )}
+
+      {/* Mobile Search Overlay */}
+      {mobileSearchOpen && (
+        <div className="fixed inset-0 bg-white z-50 md:hidden overflow-y-auto">
+          {/* Header */}
+          <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center gap-3">
+            <button
+              onClick={() => setMobileSearchOpen(false)}
+              className="p-2 text-gray-600 hover:text-cyan-600 transition"
+              aria-label="Close search"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <h2 className="text-lg font-bold text-gray-900">Search Products</h2>
+          </div>
+
+          {/* Search Form */}
+          <div className="p-4">
+            <form onSubmit={(e) => {
+              handleSearch(e);
+              setMobileSearchOpen(false);
+            }} className="space-y-4">
+              {/* Category Dropdown */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <select 
+                  value={searchCategory}
+                  onChange={(e) => setSearchCategory(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
+                >
+                  <option>All</option>
+                  {allCategories.map(cat => (
+                    <option key={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Search Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                <input
+                  type="text"
+                  placeholder="Enter product name, ID, or description..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 text-sm"
+                />
+              </div>
+
+              {/* Search Button */}
+              <button 
+                type="submit"
+                className="w-full py-3 text-white rounded-lg transition flex items-center justify-center gap-2 font-medium"
+                style={{ backgroundColor: '#00afef' }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Search Products
+              </button>
+            </form>
+
+            {/* Live Results */}
+            {searchQuery.trim().length > 1 && dropdownResults.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">Quick Results</h3>
+                <div className="space-y-2">
+                  {dropdownResults.map((product) => (
+                    <button
+                      key={product.id}
+                      onClick={() => {
+                        handleProductClick(product.id);
+                        setMobileSearchOpen(false);
+                      }}
+                      className="w-full flex items-center gap-4 p-3 bg-gray-50 hover:bg-cyan-50 rounded-lg transition group text-left"
+                    >
+                      {/* Product Image */}
+                      <div className="flex-shrink-0 w-16 h-16 bg-gray-200 rounded-lg overflow-hidden">
+                        <img
+                          src={product.image || 'https://placehold.co/100x100/f3f4f6/6b7280?text=' + encodeURIComponent(product.name)}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = 'https://placehold.co/100x100/f3f4f6/6b7280?text=No+Image';
+                          }}
+                        />
+                      </div>
+
+                      {/* Product Info */}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-gray-900 group-hover:text-cyan-600 transition line-clamp-1 mb-1">
+                          {product.name}
+                        </h4>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <span className="bg-white px-2 py-0.5 rounded">ID: {product.id}</span>
+                          {product.category && (
+                            <span className="text-gray-400">• {product.category}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Arrow Icon */}
+                      <svg className="w-5 h-5 text-gray-400 group-hover:text-cyan-600 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

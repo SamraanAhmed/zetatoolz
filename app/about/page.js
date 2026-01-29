@@ -38,23 +38,49 @@ export default function AboutPage() {
 
       {/* Our Story */}
       <div className="mb-16">
-        <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-6">A Legacy of Craftsmanship. A Future of Innovation.</h2>
         <div className="bg-white rounded-xl p-8 border border-gray-200 shadow-sm">
           <div className="prose max-w-none">
             <p className="text-gray-700 mb-4 leading-relaxed">
-              Founded in 1995, Zeta Toolz began as a small precision instrument workshop in Sialkot, Pakistan. 
-              Our founder, with over three decades of experience in surgical instrument manufacturing, envisioned 
-              creating a company that would set new standards in quality, precision, and customer service.
+              Based in the heart of <strong>Sialkot, Pakistan</strong> — a city known worldwide for its manufacturing excellence — we are a <strong>family-owned business</strong> with decades of experience in crafting high-quality beauty instruments, eyelash tweezers, embroidery hoops & tools, and lockpicking tools and sets.
             </p>
             <p className="text-gray-700 mb-4 leading-relaxed">
-              Today, we are proud to be recognized as one of the leading manufacturers of precision instruments 
-              globally. Our state-of-the-art manufacturing facilities employ over 500 skilled craftsmen and engineers 
-              who combine traditional craftsmanship with modern technology.
+              What started as a small workshop has grown into a trusted name for international buyers seeking consistent quality and dependable manufacturing.
             </p>
-            <p className="text-gray-700 leading-relaxed">
-              Every instrument that leaves our facility undergoes rigorous quality control processes, ensuring it 
-              meets the highest international standards. Our ISO 9001 and CE certifications are a testament to our 
-              unwavering commitment to excellence.
+            <p className="text-gray-700 mb-6 leading-relaxed font-semibold">
+              We pride ourselves on:
+            </p>
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-start gap-3 text-gray-700">
+                <svg className="w-6 h-6 text-cyan-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Using only the finest stainless steel</span>
+              </li>
+              <li className="flex items-start gap-3 text-gray-700">
+                <svg className="w-6 h-6 text-cyan-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Strict quality control at every stage</span>
+              </li>
+              <li className="flex items-start gap-3 text-gray-700">
+                <svg className="w-6 h-6 text-cyan-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Custom designs and OEM / private label solutions</span>
+              </li>
+              <li className="flex items-start gap-3 text-gray-700">
+                <svg className="w-6 h-6 text-cyan-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Fast, professional, and reliable customer service</span>
+              </li>
+            </ul>
+            <p className="text-gray-700 mb-2 leading-relaxed text-lg">
+              We don't just sell tools — we build long-term partnerships.
+            </p>
+            <p className="text-cyan-600 font-bold text-lg">
+              Let's grow together.
             </p>
           </div>
         </div>
