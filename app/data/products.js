@@ -7,13 +7,18 @@ export const products = [];
 jsonData.categories.forEach(category => {
   if (category.subcategories) {
     category.subcategories.forEach(subcategory => {
-      if (subcategory.products) {
-        subcategory.products.forEach(product => {
-          products.push({
-            ...product,
-            category: category.name,
-            subcategory: subcategory.name
-          });
+      if (subcategory.subsubcategories) {
+        subcategory.subsubcategories.forEach(subsubcategory => {
+          if (subsubcategory.products) {
+            subsubcategory.products.forEach(product => {
+              products.push({
+                ...product,
+                category: category.name,
+                subcategory: subcategory.name,
+                subsubcategory: subsubcategory.name
+              });
+            });
+          }
         });
       }
     });

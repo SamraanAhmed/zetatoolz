@@ -1,18 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { getCategoryInfo } from '../../../data/categories';
-import ProductCard from '../../../components/ProductCard';
-import Breadcrumb from '../../../components/Breadcrumb';
+import { getCategoryInfo } from '../../../../data/categories';
+import ProductCard from '../../../../components/ProductCard';
+import Breadcrumb from '../../../../components/Breadcrumb';
 
-export default function ProductsPageClient({ categorySlug, subcategorySlug }) {
-  console.log('ProductsPageClient - categorySlug:', categorySlug);
-  console.log('ProductsPageClient - subcategorySlug:', subcategorySlug);
-  
-  const categoryInfo = getCategoryInfo(categorySlug, subcategorySlug);
-  
-  console.log('ProductsPageClient - categoryInfo:', categoryInfo);
-  console.log('ProductsPageClient - products:', categoryInfo?.subcategory?.products);
+export default function ProductsPageClient({ categorySlug, subcategorySlug, subsubcategorySlug }) {
+  const categoryInfo = getCategoryInfo(categorySlug, subcategorySlug, subsubcategorySlug);
 
   if (!categoryInfo) {
     return (
@@ -25,24 +19,23 @@ export default function ProductsPageClient({ categorySlug, subcategorySlug }) {
     );
   }
 
-  const { category, subcategory } = categoryInfo;
-  const products = subcategory.products || [];
-  
-  console.log('ProductsPageClient - final products array:', products, 'length:', products.length);
+  const { category, subcategory, subsubcategory } = categoryInfo;
+  const products = subsubcategory.products || [];
 
   return (
     <div className="animate-fade-in">
       <Breadcrumb items={[
         { label: 'All Categories', href: '/categories' },
         { label: category.name, href: `/categories/${categorySlug}` },
-        { label: subcategory.name, href: null }
+        { label: subcategory.name, href: `/categories/${categorySlug}/${subcategorySlug}` },
+        { label: subsubcategory.name, href: null }
       ]} />
 
       {/* Header */}
       <div className="mb-10">
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">{subcategory.name}</h1>
+        <h1 className="text-4xl font-bold text-gray-900 mb-3">{subsubcategory.name}</h1>
         <p className="text-gray-600 text-lg mb-6">
-          {subcategory.description}
+          {subsubcategory.description}
         </p>
         
         {/* Stats Bar */}
@@ -73,13 +66,13 @@ export default function ProductsPageClient({ categorySlug, subcategorySlug }) {
       {/* Back Navigation */}
       <div className="pt-8 border-t border-gray-200 flex justify-between items-center">
         <Link 
-          href={`/categories/${categorySlug}`}
+          href={`/categories/${categorySlug}/${subcategorySlug}`}
           className="inline-flex items-center gap-2 text-gray-600 hover:text-cyan-600 font-medium transition"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back to {category.name}
+          Back to {subcategory.name}
         </Link>
 
         <Link 
@@ -97,7 +90,7 @@ export default function ProductsPageClient({ categorySlug, subcategorySlug }) {
           Contact our sales team for bulk orders, custom requirements, or current market pricing
         </p>
         <a 
-          href={`mailto:sales@zetatoolz.com?subject=Cart Request for ${subcategory.name}`}
+          href={`mailto:sales@zetatoolz.com?subject=Cart Request for ${subsubcategory.name}`}
           className="inline-flex items-center gap-2 bg-white text-cyan-600 font-bold py-3 px-8 rounded-lg hover:bg-cyan-50 transition"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

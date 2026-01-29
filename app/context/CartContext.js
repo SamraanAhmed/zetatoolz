@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
       if (existing) {
         // Show toast for existing item
         setToast({
-          message: 'Quantity updated in quote list',
+          message: 'Quantity updated in Cart',
           productName: product.name,
           productImage: product.image,
         });
@@ -45,7 +45,7 @@ export const CartProvider = ({ children }) => {
       }
       // Show toast for new item
       setToast({
-        message: 'Successfully added to quote list',
+        message: 'Successfully added to the Cart',
         productName: product.name,
         productImage: product.image,
       });

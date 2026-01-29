@@ -15,6 +15,7 @@ export default function AdminPage() {
   // Form states
   const [newCategory, setNewCategory] = useState({ name: '', slug: '', description: '', image: '' });
   const [newSubcategory, setNewSubcategory] = useState({ name: '', slug: '', description: '', image: '', categorySlug: '' });
+  const [newSubsubcategory, setNewSubsubcategory] = useState({ name: '', slug: '', description: '', image: '', categorySlug: '', subcategorySlug: '' });
   const [newProduct, setNewProduct] = useState({
     id: '',
     name: '',
@@ -23,6 +24,7 @@ export default function AdminPage() {
     images: [], // Multiple images support
     categorySlug: '',
     subcategorySlug: '',
+    subsubcategorySlug: '',
     specifications: {},
     features: []
   });
@@ -32,6 +34,8 @@ export default function AdminPage() {
   const [categoryImagePreview, setCategoryImagePreview] = useState('');
   const [subcategoryImage, setSubcategoryImage] = useState(null);
   const [subcategoryImagePreview, setSubcategoryImagePreview] = useState('');
+  const [subsubcategoryImage, setSubsubcategoryImage] = useState(null);
+  const [subsubcategoryImagePreview, setSubsubcategoryImagePreview] = useState('');
   const [productImages, setProductImages] = useState([]);
   const [productImagePreviews, setProductImagePreviews] = useState([]);
 
@@ -126,6 +130,16 @@ const handleCategoryImageChange = (e) => {
       setSubcategoryImage(file);
       const reader = new FileReader();
       reader.onloadend = () => setSubcategoryImagePreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubsubcategoryImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSubsubcategoryImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setSubsubcategoryImagePreview(reader.result);
       reader.readAsDataURL(file);
     }
   };
@@ -252,9 +266,62 @@ const handleCategoryImageChange = (e) => {
     setLoading(false);
   };
 
+  const handleAddSubsubcategory = async (e) => {
+    e.preventDefault();
+    if (!newSubsubcategory.name || !newSubsubcategory.categorySlug || !newSubsubcategory.subcategorySlug) {
+      showNotification('Please fill in all required fields', 'error');
+      return;
+    }
+
+    setLoading(true);
+
+    let imagePath = newSubsubcategory.image;
+    if (subsubcategoryImage) {
+      imagePath = await handleImageUpload(subsubcategoryImage);
+      if (!imagePath) {
+        setLoading(false);
+        return;
+      }
+    }
+
+    try {
+      const response = await fetch('/api/admin/data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'add-subsubcategory',
+          categorySlug: newSubsubcategory.categorySlug,
+          subcategorySlug: newSubsubcategory.subcategorySlug,
+          data: {
+            name: newSubsubcategory.name,
+            slug: newSubsubcategory.slug,
+            description: newSubsubcategory.description,
+            image: imagePath
+          }
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        showNotification('Sub-subcategory added successfully!', 'success');
+        setNewSubsubcategory({ name: '', slug: '', description: '', image: '', categorySlug: '', subcategorySlug: '' });
+        setSubsubcategoryImage(null);
+        setSubsubcategoryImagePreview('');
+        loadData();
+      } else {
+        showNotification(result.error || 'Failed to add sub-subcategory', 'error');
+      }
+    } catch (error) {
+      showNotification('Error adding sub-subcategory', 'error');
+    }
+    
+    setLoading(false);
+  };
+
   const handleAddProduct = async (e) => {
     e.preventDefault();
-    if (!newProduct.name || !newProduct.id || !newProduct.categorySlug || !newProduct.subcategorySlug) {
+    if (!newProduct.name || !newProduct.id || !newProduct.categorySlug || !newProduct.subcategorySlug || !newProduct.subsubcategorySlug) {
       showNotification('Please fill in all required fields', 'error');
       return;
     }
@@ -289,6 +356,7 @@ const handleCategoryImageChange = (e) => {
           action: 'add-product',
           categorySlug: newProduct.categorySlug,
           subcategorySlug: newProduct.subcategorySlug,
+          subsubcategorySlug: newProduct.subsubcategorySlug,
           data: {
             id: newProduct.id,
             sku: newProduct.id, // Use ID as SKU
@@ -318,6 +386,7 @@ const handleCategoryImageChange = (e) => {
           images: [],
           categorySlug: '',
           subcategorySlug: '',
+          subsubcategorySlug: '',
           specifications: {},
           features: []
         });
@@ -371,6 +440,38 @@ const handleCategoryImageChange = (e) => {
     });
   };
 
+  const handleDeleteSubsubcategory = async (categorySlug, subcategorySlug, subsubcategorySlug) => {
+    if (!confirm('Are you sure you want to delete this sub-subcategory? This will also delete all its products.')) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch('/api/admin/data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'delete-subsubcategory',
+          categorySlug,
+          subcategorySlug,
+          data: { slug: subsubcategorySlug }
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        showNotification('Sub-subcategory deleted successfully!', 'success');
+        loadData();
+      } else {
+        showNotification(result.error || 'Failed to delete sub-subcategory', 'error');
+      }
+    } catch (error) {
+      showNotification('Error deleting sub-subcategory', 'error');
+    }
+    setLoading(false);
+  };
+
   const handleDeleteCategory = async (categorySlug) => {
     if (!confirm('Are you sure you want to delete this category? This will also delete all its subcategories and products.')) {
       return;
@@ -402,7 +503,7 @@ const handleCategoryImageChange = (e) => {
   };
 
   const handleDeleteSubcategory = async (categorySlug, subcategorySlug) => {
-    if (!confirm('Are you sure you want to delete this subcategory? This will also delete all its products.')) {
+    if (!confirm('Are you sure you want to delete this subcategory? This will also delete all its sub-subcategories and products.')) {
       return;
     }
 
@@ -432,7 +533,7 @@ const handleCategoryImageChange = (e) => {
     setLoading(false);
   };
 
-  const handleDeleteProduct = async (categorySlug, subcategorySlug, productId) => {
+  const handleDeleteProduct = async (categorySlug, subcategorySlug, subsubcategorySlug, productId) => {
     if (!confirm('Are you sure you want to delete this product?')) {
       return;
     }
@@ -446,6 +547,7 @@ const handleCategoryImageChange = (e) => {
           action: 'delete-product',
           categorySlug: categorySlug,
           subcategorySlug: subcategorySlug,
+          subsubcategorySlug: subsubcategorySlug,
           data: { productId: productId }
         }),
       });
@@ -587,6 +689,16 @@ const handleCategoryImageChange = (e) => {
             }`}
           >
             Products
+          </button>
+          <button
+            onClick={() => setActiveTab('subsubcategories')}
+            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
+              activeTab === 'subsubcategories'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            Sub-subcategories
           </button>
         </div>
 
@@ -792,13 +904,131 @@ const handleCategoryImageChange = (e) => {
           </div>
         )}
 
+        {/* Subsubcategory Form */}
+        {activeTab === 'subsubcategories' && (
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Add New Sub-subcategory</h2>
+            <form onSubmit={handleAddSubsubcategory} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                    <select
+                      value={newSubsubcategory.categorySlug}
+                      onChange={(e) => setNewSubsubcategory({ ...newSubsubcategory, categorySlug: e.target.value, subcategorySlug: '' })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      required
+                    >
+                      <option value="">Select a category</option>
+                      {data.categories?.map((cat) => (
+                        <option key={cat.slug} value={cat.slug}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Subcategory *</label>
+                    <select
+                      value={newSubsubcategory.subcategorySlug}
+                      onChange={(e) => setNewSubsubcategory({ ...newSubsubcategory, subcategorySlug: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      required
+                      disabled={!newSubsubcategory.categorySlug}
+                    >
+                      <option value="">Select a subcategory</option>
+                      {getSubcategoriesForCategory(newSubsubcategory.categorySlug).map((sub) => (
+                        <option key={sub.slug} value={sub.slug}>{sub.name}</option>
+                      ))}
+                    </select>
+                  </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Sub-subcategory Name *</label>
+                <input
+                  type="text"
+                  value={newSubsubcategory.name}
+                  onChange={(e) => {
+                    setNewSubsubcategory({
+                      ...newSubsubcategory,
+                      name: e.target.value,
+                      slug: generateSlug(e.target.value)
+                    });
+                  }}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  placeholder="e.g., Standard Cuticle Nippers"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">Slug: {newSubsubcategory.slug || 'auto-generated'}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <textarea
+                  value={newSubsubcategory.description}
+                  onChange={(e) => setNewSubsubcategory({ ...newSubsubcategory, description: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  rows="3"
+                  placeholder="Brief description"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleSubsubcategoryImageChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                />
+                {subsubcategoryImagePreview && (
+                  <div className="mt-4">
+                    <img src={subsubcategoryImagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
+                  </div>
+                )}
+              </div>
+
+              <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg disabled:opacity-50">
+                {loading ? 'Adding...' : 'Add Sub-subcategory'}
+              </button>
+            </form>
+            
+            <div className="mt-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Existing Sub-subcategories</h3>
+                <div className="space-y-4">
+                    {data.categories?.map((cat) => (
+                        cat.subcategories?.map((sub) => (
+                            sub.subsubcategories && sub.subsubcategories.length > 0 && (
+                            <div key={sub.slug}>
+                                <h4 className="font-semibold text-gray-700 mb-2">{cat.name} &gt; {sub.name}</h4>
+                                <div className="space-y-2 ml-4">
+                                    {sub.subsubcategories.map((subsub) => (
+                                        <div key={subsub.slug} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
+                                            <div className="flex-1">
+                                                <p className="font-medium text-gray-900">{subsub.name}</p>
+                                                <p className="text-sm text-gray-500">{subsub.slug}</p>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-sm text-gray-600">{subsub.products?.length || 0} products</span>
+                                                <button onClick={() => handleDeleteSubsubcategory(cat.slug, sub.slug, subsub.slug)} className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">Delete</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            )
+                        ))
+                    ))}
+                </div>
+            </div>
+          </div>
+        )}
+
         {/* Product Form */}
         {activeTab === 'products' && (
           <div className="bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6">Add New Product</h2>
             <form onSubmit={handleAddProduct} className="space-y-6">
               {/* Category Selection */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
                   <select
@@ -807,7 +1037,8 @@ const handleCategoryImageChange = (e) => {
                       setNewProduct({
                         ...newProduct,
                         categorySlug: e.target.value,
-                        subcategorySlug: ''
+                        subcategorySlug: '',
+                        subsubcategorySlug: ''
                       });
                     }}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
@@ -824,7 +1055,7 @@ const handleCategoryImageChange = (e) => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Subcategory *</label>
                   <select
                     value={newProduct.subcategorySlug}
-                    onChange={(e) => setNewProduct({ ...newProduct, subcategorySlug: e.target.value })}
+                    onChange={(e) => setNewProduct({ ...newProduct, subcategorySlug: e.target.value, subsubcategorySlug: '' })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     disabled={!newProduct.categorySlug}
                     required
@@ -832,6 +1063,23 @@ const handleCategoryImageChange = (e) => {
                     <option value="">Select a subcategory</option>
                     {getSubcategoriesForCategory(newProduct.categorySlug).map((sub) => (
                       <option key={sub.slug} value={sub.slug}>{sub.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Sub-subcategory *</label>
+                  <select
+                    value={newProduct.subsubcategorySlug}
+                    onChange={(e) => setNewProduct({ ...newProduct, subsubcategorySlug: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    disabled={!newProduct.subcategorySlug}
+                    required
+                  >
+                    <option value="">Select a sub-subcategory</option>
+                    {getSubcategoriesForCategory(newProduct.categorySlug)
+                        .find(s => s.slug === newProduct.subcategorySlug)?.subsubcategories?.map((subsub) => (
+                      <option key={subsub.slug} value={subsub.slug}>{subsub.name}</option>
                     ))}
                   </select>
                 </div>
@@ -1010,35 +1258,47 @@ const handleCategoryImageChange = (e) => {
                     {cat.subcategories?.map((sub) => (
                       <div key={sub.slug} className="ml-4 mb-4">
                         <h5 className="font-medium text-gray-600 mb-2">{sub.name}</h5>
-                        <div className="space-y-2 ml-4">
-                          {sub.products?.map((product) => (
-                            <div key={product.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                              {product.image && (
-                                <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded" />
-                              )}
-                              <div className="flex-1">
-                                <p className="font-medium text-gray-900">{product.name}</p>
-                                <p className="text-sm text-gray-500">{product.id}</p>
-                              </div>
-                              {product.images && (
-                                <span className="text-xs text-cyan-600 bg-cyan-50 px-2 py-1 rounded">
-                                  {product.images.length} images
-                                </span>
-                              )}
-                              <button
-                                onClick={() => handleDeleteProduct(cat.slug, sub.slug, product.id)}
-                                disabled={loading}
-                                className="px-3 py-1.5 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center gap-1"
-                                title="Delete product"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                                Delete
-                              </button>
+                        {sub.subsubcategories?.length > 0 ? (
+                            <div className="space-y-2 ml-4">
+                                {sub.subsubcategories.map((subsub) => (
+                                    <div key={subsub.slug} className="mb-4">
+                                        <h6 className="text-sm font-semibold text-gray-500 mb-2 border-b pb-1">{subsub.name}</h6>
+                                        <div className="space-y-2 ml-2">
+                                            {subsub.products?.length > 0 ? (
+                                                subsub.products.map((product) => (
+                                                <div key={product.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                                    {product.image && (
+                                                        <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded" />
+                                                    )}
+                                                    <div className="flex-1">
+                                                        <p className="font-medium text-gray-900">{product.name}</p>
+                                                        <p className="text-sm text-gray-500">{product.id}</p>
+                                                    </div>
+                                                    {product.images && (
+                                                        <span className="text-xs text-cyan-600 bg-cyan-50 px-2 py-1 rounded">
+                                                        {product.images.length} images
+                                                        </span>
+                                                    )}
+                                                    <button
+                                                        onClick={() => handleDeleteProduct(cat.slug, sub.slug, subsub.slug, product.id)}
+                                                        disabled={loading}
+                                                        className="px-3 py-1.5 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center gap-1"
+                                                        title="Delete product"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                                ))
+                                            ) : (
+                                                <p className="text-sm text-gray-400 italic">No products in this sub-subcategory</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                          ))}
-                        </div>
+                        ) : (
+                            <div className="ml-4 text-sm text-gray-400 italic">No sub-subcategories</div>
+                        )}
                       </div>
                     ))}
                   </div>

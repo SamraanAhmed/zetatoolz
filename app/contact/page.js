@@ -121,7 +121,7 @@ export default function ContactPage() {
                   value={formData.subject}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500 transition"
-                  placeholder="Quote Request / Product Inquiry / General Question"
+                  placeholder="Cart Request / Product Inquiry / General Question"
                 />
               </div>
 
@@ -237,7 +237,7 @@ export default function ContactPage() {
                 <div className="text-sm text-cyan-100">View all products</div>
               </a>
               <a href="/cart" className="block bg-white/10 hover:bg-white/20 rounded-lg p-3 transition">
-                <div className="font-semibold">Request Quote</div>
+                <div className="font-semibold">Request Cart</div>
                 <div className="text-sm text-cyan-100">Get pricing for items</div>
               </a>
             </div>

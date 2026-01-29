@@ -43,7 +43,7 @@ export async function GET() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { action, categorySlug, subcategorySlug, data: newData } = body;
+    const { action, categorySlug, subcategorySlug, subsubcategorySlug, data: newData } = body;
 
     const currentData = readData();
 
@@ -93,6 +93,31 @@ export async function POST(request) {
           name,
           image: image || '/placeholder.jpg',
           description,
+          subsubcategories: [] // Modified for 4-tier
+        });
+        break;
+      }
+
+      case 'add-subsubcategory': {
+        const { slug, name, description, image } = newData;
+        const category = currentData.categories.find(c => c.slug === categorySlug);
+        
+        if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+
+        const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
+        if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
+
+        if (!subcategory.subsubcategories) subcategory.subsubcategories = [];
+
+        if (subcategory.subsubcategories.find(s => s.slug === slug)) {
+          return NextResponse.json({ error: 'Sub-subcategory already exists' }, { status: 400 });
+        }
+
+        subcategory.subsubcategories.push({
+          slug,
+          name,
+          image: image || '/placeholder.jpg',
+          description,
           products: []
         });
         break;
@@ -100,22 +125,13 @@ export async function POST(request) {
 
       case 'add-product': {
         const category = currentData.categories.find(c => c.slug === categorySlug);
-        
-        if (!category) {
-          return NextResponse.json(
-            { error: 'Category not found' },
-            { status: 404 }
-          );
-        }
+        if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
-        
-        if (!subcategory) {
-          return NextResponse.json(
-            { error: 'Subcategory not found' },
-            { status: 404 }
-          );
-        }
+        if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
+
+        const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
+        if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
 
         const product = {
           id: newData.id,
@@ -124,7 +140,7 @@ export async function POST(request) {
           price: newData.price,
           description: newData.description,
           image: newData.image,
-          images: newData.images || [newData.image], // Support multiple images
+          images: newData.images || [newData.image],
           details: {
             overview: newData.overview || newData.description,
             specifications: newData.specifications || {},
@@ -132,44 +148,30 @@ export async function POST(request) {
           }
         };
 
-        // Check if product ID already exists
-        if (subcategory.products.find(p => p.id === product.id)) {
-          return NextResponse.json(
-            { error: 'Product ID already exists' },
-            { status: 400 }
-          );
+        if (subsubcategory.products.find(p => p.id === product.id)) {
+          return NextResponse.json({ error: 'Product ID already exists' }, { status: 400 });
         }
 
-        subcategory.products.push(product);
+        subsubcategory.products.push(product);
         break;
       }
 
       case 'update-product': {
         const category = currentData.categories.find(c => c.slug === categorySlug);
-        if (!category) {
-          return NextResponse.json(
-            { error: 'Category not found' },
-            { status: 404 }
-          );
-        }
+        if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
-        if (!subcategory) {
-          return NextResponse.json(
-            { error: 'Subcategory not found' },
-            { status: 404 }
-          );
-        }
+        if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
 
-        const productIndex = subcategory.products.findIndex(p => p.id === newData.id);
+        const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
+        if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
+
+        const productIndex = subsubcategory.products.findIndex(p => p.id === newData.id);
         if (productIndex === -1) {
-          return NextResponse.json(
-            { error: 'Product not found' },
-            { status: 404 }
-          );
+          return NextResponse.json({ error: 'Product not found' }, { status: 404 });
         }
 
-        subcategory.products[productIndex] = {
+        subsubcategory.products[productIndex] = {
           id: newData.id,
           sku: newData.sku,
           name: newData.name,
@@ -188,22 +190,15 @@ export async function POST(request) {
       case 'delete-product': {
         const { productId } = newData;
         const category = currentData.categories.find(c => c.slug === categorySlug);
-        if (!category) {
-          return NextResponse.json(
-            { error: 'Category not found' },
-            { status: 404 }
-          );
-        }
+        if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
-        if (!subcategory) {
-          return NextResponse.json(
-            { error: 'Subcategory not found' },
-            { status: 404 }
-          );
-        }
+        if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
 
-        subcategory.products = subcategory.products.filter(p => p.id !== productId);
+        const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
+        if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
+
+        subsubcategory.products = subsubcategory.products.filter(p => p.id !== productId);
         break;
       }
 
@@ -212,10 +207,7 @@ export async function POST(request) {
         const categoryIndex = currentData.categories.findIndex(c => c.slug === slug);
         
         if (categoryIndex === -1) {
-          return NextResponse.json(
-            { error: 'Category not found' },
-            { status: 404 }
-          );
+          return NextResponse.json({ error: 'Category not found' }, { status: 404 });
         }
 
         currentData.categories.splice(categoryIndex, 1);
@@ -224,25 +216,34 @@ export async function POST(request) {
 
       case 'delete-subcategory': {
         const category = currentData.categories.find(c => c.slug === categorySlug);
-        
-        if (!category) {
-          return NextResponse.json(
-            { error: 'Category not found' },
-            { status: 404 }
-          );
-        }
+        if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const { slug } = newData;
         const subcategoryIndex = category.subcategories.findIndex(s => s.slug === slug);
         
         if (subcategoryIndex === -1) {
-          return NextResponse.json(
-            { error: 'Subcategory not found' },
-            { status: 404 }
-          );
+          return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
         }
 
         category.subcategories.splice(subcategoryIndex, 1);
+        break;
+      }
+
+      case 'delete-subsubcategory': {
+        const category = currentData.categories.find(c => c.slug === categorySlug);
+        if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+
+        const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
+        if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
+
+        const { slug } = newData;
+        const subSubIndex = subcategory.subsubcategories?.findIndex(s => s.slug === slug);
+
+        if (subSubIndex === undefined || subSubIndex === -1) {
+             return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
+        }
+
+        subcategory.subsubcategories.splice(subSubIndex, 1);
         break;
       }
 

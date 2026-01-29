@@ -3,10 +3,10 @@
 import { useCart } from '../context/CartContext';
 import Link from 'next/link';
 
-export default function QuoteListPage() {
+export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
 
-  const handleRequestQuote = () => {
+  const handleRequestCart = () => {
     const today = new Date().toLocaleDateString('en-US', { 
       weekday: 'long', 
       year: 'numeric', 
@@ -22,10 +22,10 @@ export default function QuoteListPage() {
       productList += `   Quantity: ${item.quantity}\n\n`;
     });
 
-    const subject = `Bulk Quote Request - ${cart.length} Items`;
+    const subject = `Bulk Cart Request - ${cart.length} Items`;
     const body = `Hello,
 
-I would like to request a bulk quote for the following items:
+I would like to request a bulk cart for the following items:
 
 ${productList}
 Total Items: ${cart.length}
@@ -57,8 +57,8 @@ Thank you for your assistance.`;
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Quote List is Empty</h2>
-        <p className="text-gray-600 mb-8 max-w-md">Add products to your quote list to request pricing from our team.</p>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Cart is Empty</h2>
+        <p className="text-gray-600 mb-8 max-w-md">Add products to your cart to request pricing from our team.</p>
         <Link 
           href="/products" 
           className="text-white font-bold py-3 px-8 rounded-lg transition-all hover:scale-105"
@@ -75,12 +75,12 @@ Thank you for your assistance.`;
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Quote Request List</h1>
-        <p className="text-gray-600">Review your items and request a bulk quote from our sales team</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Cart</h1>
+        <p className="text-gray-600">Review your items and request a bulk cart from our sales team</p>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Quote Items */}
+        {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
           {cart.map((item) => (
             <div key={item.id} className="bg-white rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-6 border border-gray-200 hover:shadow-md transition-shadow">
@@ -122,7 +122,7 @@ Thank you for your assistance.`;
                   onClick={() => removeFromCart(item.id)}
                   className="text-gray-400 hover:text-red-500 transition p-2"
                   aria-label="Remove item"
-                  title="Remove from quote list"
+                  title="Remove from cart"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -142,10 +142,10 @@ Thank you for your assistance.`;
           </div>
         </div>
 
-        {/* Quote Summary */}
+        {/* Cart Summary */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg p-6 border-2 border-cyan-200 sticky top-24">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Quote Summary</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-6">Cart Summary</h3>
             
             <div className="space-y-4 mb-6">
               <div className="flex justify-between text-gray-700">
@@ -161,24 +161,24 @@ Thank you for your assistance.`;
                 <div className="bg-cyan-50 rounded-lg p-4 mb-4">
                   <p className="text-sm text-cyan-800 font-semibold mb-1">💼 Pricing Information</p>
                   <p className="text-xs text-cyan-700">
-                    Market rates updated daily. Request a quote to receive current pricing for your specific requirements.
+                    Market rates updated daily. Request a cart to receive current pricing for your specific requirements.
                   </p>
                 </div>
               </div>
             </div>
             
             <button 
-              onClick={handleRequestQuote}
+              onClick={handleRequestCart}
               className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-all shadow-lg hover:shadow-cyan-500/25 flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              Request Quote for All Items
+              Request Cart for All Items
             </button>
             
             <p className="text-xs text-gray-500 text-center mt-4">
-              📧 Opens your email client with pre-filled quote request
+              📧 Opens your email client with pre-filled cart request
             </p>
           </div>
         </div>

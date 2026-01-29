@@ -1,5 +1,5 @@
 import { categoriesData } from '../../../data/categories';
-import ProductsPageClient from './ProductsPageClient';
+import SubSubcategoriesPageClient from './SubSubcategoriesPageClient';
 
 export function generateStaticParams() {
   const params = [];
@@ -17,8 +17,8 @@ export function generateStaticParams() {
   return params;
 }
 
-export default async function ProductsPage({ params }) {
+export default async function SubCategoryPage({ params }) {
   const { category, subcategory } = await params;
   
-  return <ProductsPageClient categorySlug={category} subcategorySlug={subcategory} />;
+  return <SubSubcategoriesPageClient categorySlug={category} subcategorySlug={subcategory} />;
 }

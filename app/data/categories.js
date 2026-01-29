@@ -8,10 +8,22 @@ jsonData.categories.forEach(cat => {
   const subcats = {};
   if (cat.subcategories) {
     cat.subcategories.forEach(sub => {
+      const subSubcats = {};
+      if (sub.subsubcategories) {
+          sub.subsubcategories.forEach(subsub => {
+              subSubcats[subsub.slug] = {
+                  name: subsub.name,
+                  image: subsub.image,
+                  description: subsub.description
+              };
+          });
+      }
+
       subcats[sub.slug] = {
         name: sub.name,
         image: sub.image,
-        description: sub.description
+        description: sub.description,
+        subsubcategories: subSubcats
       };
     });
   }
@@ -56,7 +68,7 @@ export function getSubcategories(categorySlug) {
 }
 
 // Helper function to get category info
-export function getCategoryInfo(categorySlug, subcategorySlug = null) {
+export function getCategoryInfo(categorySlug, subcategorySlug = null, subsubcategorySlug = null) {
   const category = jsonData.categories.find(c => c.slug === categorySlug);
   if (!category) return null;
   
@@ -64,6 +76,29 @@ export function getCategoryInfo(categorySlug, subcategorySlug = null) {
     const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
     if (!subcategory) return null;
     
+    if (subsubcategorySlug) {
+      const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
+      if (!subsubcategory) return null;
+
+      return {
+        category: {
+          slug: category.slug,
+          name: category.name
+        },
+        subcategory: {
+          slug: subcategory.slug,
+          name: subcategory.name
+        },
+        subsubcategory: {
+          slug: subsubcategory.slug,
+          name: subsubcategory.name,
+          description: subsubcategory.description,
+          image: subsubcategory.image,
+          products: subsubcategory.products || []
+        }
+      };
+    }
+
     return {
       category: {
         slug: category.slug,
@@ -74,7 +109,7 @@ export function getCategoryInfo(categorySlug, subcategorySlug = null) {
         name: subcategory.name,
         description: subcategory.description,
         image: subcategory.image,
-        products: subcategory.products || []
+        subsubcategories: subcategory.subsubcategories || []
       }
     };
   }

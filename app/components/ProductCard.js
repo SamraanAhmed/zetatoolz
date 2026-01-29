@@ -74,12 +74,12 @@ Thank you.`;
           <button 
             onClick={() => addToCart(product)}
             className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm border border-gray-300"
-            title="Add to Quote List"
+            title="Add to Cart"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Quote List
+            Add to Cart
           </button>
           
           <button 

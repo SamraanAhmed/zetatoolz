@@ -15,8 +15,8 @@ export default function FAQPage() {
       category: "Ordering & Pricing",
       questions: [
         {
-          q: "How do I request a quote?",
-          a: "You can request a quote in two ways: 1) Click the 'Email Inquiry' button on any product page to request pricing for individual items, or 2) Add multiple items to your Quote List and click 'Request Quote for All Items' to get bulk pricing. Our sales team will respond within 24 hours with current market rates."
+          q: "How do I request a cart?",
+          a: "You can request a cart in two ways: 1) Click the 'Email Inquiry' button on any product page to request pricing for individual items, or 2) Add multiple items to your Cart and click 'Request Cart for All Items' to get bulk pricing. Our sales team will respond within 24 hours with current market rates."
         },
         {
           q: "What is the minimum order quantity (MOQ)?",
@@ -24,7 +24,7 @@ export default function FAQPage() {
         },
         {
           q: "Do you offer bulk discounts?",
-          a: "Yes! We offer attractive volume discounts for bulk orders. The discount tier depends on order quantity, product type, and delivery schedule. Contact us with your requirements for a customized bulk pricing quote."
+          a: "Yes! We offer attractive volume discounts for bulk orders. The discount tier depends on order quantity, product type, and delivery schedule. Contact us with your requirements for a customized bulk pricing cart."
         }
       ]
     },
@@ -66,7 +66,7 @@ export default function FAQPage() {
         },
         {
           q: "What are the shipping costs?",
-          a: "Shipping costs depend on order weight, dimensions, destination, and shipping method selected. We provide accurate shipping quotes during the quotation process. Bulk orders may qualify for free or discounted shipping."
+          a: "Shipping costs depend on order weight, dimensions, destination, and shipping method selected. We provide accurate shipping carts during the quotation process. Bulk orders may qualify for free or discounted shipping."
         }
       ]
     },

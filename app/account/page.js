@@ -23,25 +23,25 @@ export default function AccountPage() {
       date: '2024-01-15',
       items: 5,
       status: 'Delivered',
-      total: 'Quote Approved'
+      total: 'Cart Approved'
     },
     {
       id: 'ORD-2024-002',
       date: '2024-01-10',
       items: 3,
       status: 'In Transit',
-      total: 'Quote Approved'
+      total: 'Cart Approved'
     },
     {
       id: 'ORD-2023-089',
       date: '2023-12-20',
       items: 12,
       status: 'Delivered',
-      total: 'Quote Approved'
+      total: 'Cart Approved'
     }
   ];
 
-  const quoteRequests = [
+  const cartRequests = [
     {
       id: 'QT-2024-015',
       date: '2024-01-18',
@@ -52,7 +52,7 @@ export default function AccountPage() {
       id: 'QT-2024-012',
       date: '2024-01-14',
       items: 4,
-      status: 'Quote Sent'
+      status: 'Cart Sent'
     }
   ];
 
@@ -103,9 +103,9 @@ export default function AccountPage() {
               </button>
 
               <button
-                onClick={() => setActiveTab('quotes')}
+                onClick={() => setActiveTab('carts')}
                 className={`w-full text-left px-4 py-3 rounded-lg font-medium transition ${
-                  activeTab === 'quotes'
+                  activeTab === 'carts'
                     ? 'bg-cyan-600 text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
@@ -114,7 +114,7 @@ export default function AccountPage() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  Quote Requests
+                  Cart Requests
                 </div>
               </button>
 
@@ -126,7 +126,7 @@ export default function AccountPage() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
-                  Quote List
+                  Cart
                 </div>
               </Link>
 
@@ -271,37 +271,37 @@ export default function AccountPage() {
             </div>
           )}
 
-          {/* Quotes Tab */}
-          {activeTab === 'quotes' && (
+          {/* Carts Tab */}
+          {activeTab === 'carts' && (
             <div className="space-y-6">
               <div className="bg-white rounded-xl border border-gray-200 p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Quote Requests</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Cart Requests</h2>
                 
                 <div className="space-y-4">
-                  {quoteRequests.map((quote) => (
-                    <div key={quote.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                  {cartRequests.map((cart) => (
+                    <div key={cart.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
                       <div className="flex flex-wrap items-center justify-between gap-4">
                         <div>
-                          <div className="font-bold text-gray-900 mb-1">Quote #{quote.id}</div>
-                          <div className="text-sm text-gray-600">Requested on {quote.date}</div>
+                          <div className="font-bold text-gray-900 mb-1">Cart #{cart.id}</div>
+                          <div className="text-sm text-gray-600">Requested on {cart.date}</div>
                         </div>
                         
                         <div className="flex items-center gap-6">
                           <div className="text-center">
                             <div className="text-sm text-gray-600">Items</div>
-                            <div className="font-semibold text-gray-900">{quote.items}</div>
+                            <div className="font-semibold text-gray-900">{cart.items}</div>
                           </div>
                           <div>
                             <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                              quote.status === 'Quote Sent' 
+                              cart.status === 'Cart Sent' 
                                 ? 'bg-green-100 text-green-700' 
                                 : 'bg-yellow-100 text-yellow-700'
                             }`}>
-                              {quote.status}
+                              {cart.status}
                             </span>
                           </div>
                           <button className="text-cyan-600 hover:text-cyan-700 font-semibold">
-                            View Quote →
+                            View Cart →
                           </button>
                         </div>
                       </div>
@@ -314,7 +314,7 @@ export default function AccountPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    Request New Quote
+                    Request New Cart
                   </Link>
                 </div>
               </div>
@@ -344,7 +344,7 @@ export default function AccountPage() {
                       </label>
                       <label className="flex items-center gap-3">
                         <input type="checkbox" defaultChecked className="w-4 h-4 text-cyan-600" />
-                        <span className="text-gray-700">Quote responses and pricing updates</span>
+                        <span className="text-gray-700">Cart responses and pricing updates</span>
                       </label>
                       <label className="flex items-center gap-3">
                         <input type="checkbox" className="w-4 h-4 text-cyan-600" />
