@@ -23,10 +23,18 @@ Please provide the current market price for today, ${today}.
 
 Thank you.`;
 
-    // Gmail compose URL
-    const gmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent('xeedemo1@gmail.com')}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // Check if user is on mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    window.open(gmailURL, '_blank');
+    if (isMobile) {
+      // On mobile, use mailto link which opens the default email app
+      const mailtoURL = `mailto:xeedemo1@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoURL;
+    } else {
+      // On desktop, use Gmail compose URL
+      const gmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent('xeedemo1@gmail.com')}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.open(gmailURL, '_blank');
+    }
   };
 
   return (
