@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Admin Panel - Don't deploy to production
+/app/admin/
+/app/api/admin/
+ADMIN_*.md
