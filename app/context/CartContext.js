@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import Toast from '../components/Toast';
 
 const CartContext = createContext();
 
@@ -9,6 +10,7 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [toast, setToast] = useState(null);
 
   // Load cart from local storage on mount
   useEffect(() => {
@@ -31,13 +33,24 @@ export const CartProvider = ({ children }) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {
+        // Show toast for existing item
+        setToast({
+          message: 'Quantity updated in quote list',
+          productName: product.name,
+          productImage: product.image,
+        });
         return prev.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
+      // Show toast for new item
+      setToast({
+        message: 'Successfully added to quote list',
+        productName: product.name,
+        productImage: product.image,
+      });
       return [...prev, { ...product, quantity: 1 }];
     });
-    setIsCartOpen(true);
   };
 
   const removeFromCart = (productId) => {
@@ -78,9 +91,20 @@ export const CartProvider = ({ children }) => {
         getCartCount,
         isCartOpen,
         setIsCartOpen,
+        toast,
+        setToast,
       }}
     >
       {children}
+      {toast && (
+        <Toast
+          message={toast.message}
+          productName={toast.productName}
+          productImage={toast.productImage}
+          onClose={() => setToast(null)}
+          duration={3000}
+        />
+      )}
     </CartContext.Provider>
   );
 };
