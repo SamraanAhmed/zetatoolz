@@ -141,6 +141,7 @@ export async function POST(request) {
           description: newData.description,
           image: newData.image,
           images: newData.images || [newData.image],
+          variants: newData.variants || [],
           details: {
             overview: newData.overview || newData.description,
             specifications: newData.specifications || {},

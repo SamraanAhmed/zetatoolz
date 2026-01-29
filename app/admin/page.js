@@ -26,7 +26,8 @@ export default function AdminPage() {
     subcategorySlug: '',
     subsubcategorySlug: '',
     specifications: {},
-    features: []
+    features: [],
+    variants: [] // Product variants
   });
   
   // Image states
@@ -38,6 +39,12 @@ export default function AdminPage() {
   const [subsubcategoryImagePreview, setSubsubcategoryImagePreview] = useState('');
   const [productImages, setProductImages] = useState([]);
   const [productImagePreviews, setProductImagePreviews] = useState([]);
+  
+  // Variant states
+  const [hasVariants, setHasVariants] = useState(false);
+  const [variantName, setVariantName] = useState('');
+  const [variantImages, setVariantImages] = useState([]);
+  const [variantImagePreviews, setVariantImagePreviews] = useState([]);
 
   // Specification and feature management
   const [specKey, setSpecKey] = useState('');
@@ -114,7 +121,7 @@ export default function AdminPage() {
     }
   };
 
-const handleCategoryImageChange = (e) => {
+  const handleCategoryImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setCategoryImage(file);
@@ -163,6 +170,74 @@ const handleCategoryImageChange = (e) => {
         reader.readAsDataURL(file);
       });
     }
+  };
+
+  const handleVariantImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setVariantImages(files);
+      const previews = [];
+      let loadedCount = 0;
+      
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          previews.push(reader.result);
+          loadedCount++;
+          if (loadedCount === files.length) {
+            setVariantImagePreviews([...previews]);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const handleAddVariant = async () => {
+    if (!variantName || variantImages.length === 0) {
+      showNotification('Please provide variant name and at least one image', 'error');
+      return;
+    }
+
+    setLoading(true);
+    
+    // Upload all variant images
+    const imagePaths = [];
+    for (const imageFile of variantImages) {
+      const path = await handleImageUpload(imageFile);
+      if (path) {
+        imagePaths.push(path);
+      }
+    }
+    
+    setLoading(false);
+
+    if (imagePaths.length > 0) {
+      setNewProduct({
+        ...newProduct,
+        variants: [
+          ...newProduct.variants, 
+          { 
+            name: variantName, 
+            image: imagePaths[0], // Keep primary image for backward compatibility
+            images: imagePaths // Store all uploaded images
+          }
+        ]
+      });
+      setVariantName('');
+      setVariantImages([]);
+      setVariantImagePreviews([]);
+      showNotification('Variant added', 'success');
+    } else {
+      showNotification('Failed to upload variant images', 'error');
+    }
+  };
+
+  const handleRemoveVariant = (index) => {
+    setNewProduct({
+      ...newProduct,
+      variants: newProduct.variants.filter((_, i) => i !== index)
+    });
   };
 
   const handleAddCategory = async (e) => {
@@ -365,6 +440,7 @@ const handleCategoryImageChange = (e) => {
             description: newProduct.description,
             image: imagePaths[0], // First image as main
             images: imagePaths, // All images
+            variants: hasVariants ? newProduct.variants : [], // Add variants only if enabled
             details: {
               overview: newProduct.overview || newProduct.description,
               specifications: newProduct.specifications,
@@ -388,10 +464,12 @@ const handleCategoryImageChange = (e) => {
           subcategorySlug: '',
           subsubcategorySlug: '',
           specifications: {},
-          features: []
+          features: [],
+          variants: []
         });
         setProductImages([]);
         setProductImagePreviews([]);
+        setHasVariants(false);
         loadData();
       } else {
         showNotification(result.error || 'Failed to add product', 'error');
@@ -1212,6 +1290,102 @@ const handleCategoryImageChange = (e) => {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Variants Toggle */}
+              <div className="border-t border-gray-200 pt-6 mt-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <input
+                    type="checkbox"
+                    id="hasVariants"
+                    checked={hasVariants}
+                    onChange={(e) => setHasVariants(e.target.checked)}
+                    className="w-5 h-5 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
+                  />
+                  <label htmlFor="hasVariants" className="text-gray-900 font-medium">
+                    Does this product have variants?
+                  </label>
+                </div>
+
+                {hasVariants && (
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Product Variants</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Variant Name</label>
+                        <input
+                          type="text"
+                          value={variantName}
+                          onChange={(e) => setVariantName(e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                          placeholder="e.g. Silver, Gold, 20cm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Variant Images</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={handleVariantImagesChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Select multiple images if needed.</p>
+                      </div>
+                      <div className="md:col-span-2">
+                        {variantImagePreviews.length > 0 && (
+                          <div className="mb-4 grid grid-cols-4 gap-2">
+                            {variantImagePreviews.map((preview, idx) => (
+                              <img key={idx} src={preview} alt={`Variant Preview ${idx}`} className="h-24 w-full object-cover rounded-lg border border-gray-200 bg-white" />
+                            ))}
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={handleAddVariant}
+                          disabled={loading || !variantName || variantImages.length === 0}
+                          className="w-full px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Add Variant
+                        </button>
+                      </div>
+                    </div>
+
+                    {newProduct.variants.length > 0 && (
+                      <div className="space-y-2 mb-6">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Added Variants</label>
+                        <div className="grid grid-cols-1 gap-2">
+                          {newProduct.variants.map((variant, index) => (
+                            <div key={index} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                              <div className="flex items-center gap-4">
+                                {variant.image && (
+                                  <div className="relative">
+                                    <img src={variant.image} alt={variant.name} className="w-12 h-12 object-cover rounded-md bg-gray-100" />
+                                    {variant.images && variant.images.length > 1 && (
+                                      <span className="absolute -top-1 -right-1 bg-cyan-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border border-white">
+                                        +{variant.images.length - 1}
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+                                <span className="font-medium text-gray-900">{variant.name}</span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveVariant(index)}
+                                className="text-red-500 hover:text-red-700 p-2"
+                              >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Product Images - Multiple */}

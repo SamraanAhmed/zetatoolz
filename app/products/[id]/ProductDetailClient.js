@@ -9,6 +9,7 @@ export default function ProductDetailClient({ id }) {
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
@@ -16,7 +17,16 @@ export default function ProductDetailClient({ id }) {
     // Find product by ID
     const foundProduct = products.find(p => p.id === id);
     setProduct(foundProduct);
+    
+    // Initialize variant if available
+    if (foundProduct?.variants?.length > 0) {
+      setSelectedVariant(foundProduct.variants[0]);
+    }
   }, [id]);
+
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [selectedVariant]);
 
   const handleEmailInquiry = () => {
     if (!product) return;
@@ -28,10 +38,11 @@ export default function ProductDetailClient({ id }) {
       day: 'numeric' 
     });
     
-    const subject = `Inquiry: Purchase Request for ${product.name}`;
+    const variantInfo = selectedVariant ? ` - ${selectedVariant.name}` : '';
+    const subject = `Inquiry: Purchase Request for ${product.name}${variantInfo}`;
     const body = `Hello,
 
-I am interested in purchasing the ${product.name}.
+I am interested in purchasing the ${product.name}${variantInfo}.
 
 Please provide the current market price for today, ${today}.
 
@@ -72,10 +83,12 @@ Thank you.`;
     );
   }
 
-  // Use product images if available, otherwise use single image
-  const imageGallery = product.images && product.images.length > 0 
-    ? product.images 
-    : [product.image || 'https://placehold.co/800x800/f3f4f6/6b7280?text=' + encodeURIComponent(product.name)];
+  // Use variant image(s) if selected, otherwise use product images or single image
+  const imageGallery = selectedVariant
+    ? (selectedVariant.images && selectedVariant.images.length > 0 ? selectedVariant.images : [selectedVariant.image])
+    : (product.images && product.images.length > 0 
+        ? product.images 
+        : [product.image || 'https://placehold.co/800x800/f3f4f6/6b7280?text=' + encodeURIComponent(product.name)]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -192,10 +205,41 @@ Thank you.`;
               <p className="text-gray-700 leading-relaxed">{product.description}</p>
             </div>
 
+            {/* Variants Selection */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="pt-2">
+                <h3 className="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wider">Available Variants</h3>
+                <div className="flex flex-wrap gap-3">
+                  {product.variants.map((variant) => (
+                    <button
+                      key={variant.name}
+                      onClick={() => setSelectedVariant(variant)}
+                      className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all border-2 ${
+                        selectedVariant?.name === variant.name
+                          ? 'border-cyan-500 bg-cyan-50 text-cyan-700 shadow-sm'
+                          : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      {variant.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Action Buttons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
               <button 
-                onClick={() => addToCart(product)}
+                onClick={() => {
+                  const cartItem = {
+                    ...product,
+                    id: selectedVariant ? `${product.id}-${selectedVariant.name}` : product.id,
+                    name: selectedVariant ? `${product.name} (${selectedVariant.name})` : product.name,
+                    image: imageGallery[0],
+                    originalId: product.id
+                  };
+                  addToCart(cartItem);
+                }}
                 className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-4 px-6 rounded-xl transition-all border-2 border-gray-300 hover:border-gray-400 flex items-center justify-center gap-3 shadow-md hover:shadow-lg"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

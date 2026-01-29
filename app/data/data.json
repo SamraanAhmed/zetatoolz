@@ -38,7 +38,21 @@
                                             "Sharp Blades",
                                             "Ergonomic Grip"
                                         ]
-                                    }
+                                    },
+                                    "variants": [
+                                        {
+                                            "name": "Silver",
+                                            "image": "/components/Cuticle Nipper/1/Untitled-2.jpg"
+                                        },
+                                        {
+                                            "name": "Gold",
+                                            "image": "/components/Cuticle Nipper/2/Untitled-2.jpg"
+                                        },
+                                        {
+                                            "name": "Matte Black",
+                                            "image": "/components/Cuticle Nipper/3/Untitled-2.jpg"
+                                        }
+                                    ]
                                 },
                                 {
                                     "id": "BI-CN-002",
