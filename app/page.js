@@ -60,13 +60,107 @@ export default function Home() {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
-  // Auto-play carousel
+  // Auto-play carousel (only if slides exist)
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
-  }, []);
+    if (slides.length > 0) {
+      const timer = setInterval(nextSlide, 5000);
+      return () => clearInterval(timer);
+    }
+  }, [slides.length]);
  
 
+  // Show a welcome message if no categories exist yet
+  if (slides.length === 0) {
+    return (
+      <div className="space-y-12 md:space-y-20">
+        {/* Empty State Hero */}
+        <section className="relative h-[500px] sm:h-[550px] lg:h-[600px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl bg-gradient-to-br from-cyan-500 to-blue-600">
+          <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center">
+            <div className="mb-6">
+              <svg className="w-24 h-24 text-white/80 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-4 leading-tight drop-shadow-xl">
+              Welcome to Zeta Tools
+            </h1>
+            <p className="text-xl text-white/90 mb-8 max-w-2xl">
+              Your B2B platform for precision instruments is ready. Add your first products via the admin dashboard to get started.
+            </p>
+            <Link 
+              href="/admin"
+              className="inline-flex items-center gap-2 bg-white text-cyan-600 px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition-all shadow-lg hover:scale-105 text-lg"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Go to Admin Dashboard
+            </Link>
+            <p className="text-white/70 mt-6 text-sm">
+              Default password: <span className="font-mono bg-white/20 px-3 py-1 rounded">admin123</span>
+            </p>
+          </div>
+        </section>
+
+        {/* Trust Signals / Features Bar */}
+        <section className="bg-slate-800 rounded-xl md:rounded-2xl shadow-lg -mt-6 md:-mt-10 relative z-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 px-4 sm:px-6 md:px-8 py-8 md:py-10">
+            {/* Feature 1: On Time Deliveries */}
+            <div className="flex flex-col items-center text-center group">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-slate-600 flex items-center justify-center mb-3 md:mb-4 group-hover:border-cyan-500 transition-colors">
+                <svg className="w-7 h-7 md:w-8 md:h-8 text-slate-300 group-hover:text-cyan-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="text-base md:text-lg font-bold text-white mb-2">On Time Deliveries</h3>
+              <p className="text-xs md:text-sm text-slate-400 font-light">
+                Global shipping with guaranteed delivery timelines for all orders
+              </p>
+            </div>
+
+            {/* Feature 2: Quality Guaranteed */}
+            <div className="flex flex-col items-center text-center group">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-slate-600 flex items-center justify-center mb-3 md:mb-4 group-hover:border-cyan-500 transition-colors">
+                <svg className="w-7 h-7 md:w-8 md:h-8 text-slate-300 group-hover:text-cyan-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-base md:text-lg font-bold text-white mb-2">Quality Guaranteed</h3>
+              <p className="text-xs md:text-sm text-slate-400 font-light">
+                Surgical-grade stainless steel with precision manufacturing standards
+              </p>
+            </div>
+
+            {/* Feature 3: ISO 9001 & CE Certified */}
+            <div className="flex flex-col items-center text-center group">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-slate-600 flex items-center justify-center mb-3 md:mb-4 group-hover:border-cyan-500 transition-colors">
+                <svg className="w-7 h-7 md:w-8 md:h-8 text-slate-300 group-hover:text-cyan-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+              </div>
+              <h3 className="text-base md:text-lg font-bold text-white mb-2">ISO 9001 & CE Certified</h3>
+              <p className="text-xs md:text-sm text-slate-400 font-light">
+                Internationally certified manufacturing meeting medical-grade standards
+              </p>
+            </div>
+
+            {/* Feature 4: 24/7 Customer Support */}
+            <div className="flex flex-col items-center text-center group">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-slate-600 flex items-center justify-center mb-3 md:mb-4 group-hover:border-cyan-500 transition-colors">
+                <svg className="w-7 h-7 md:w-8 md:h-8 text-slate-300 group-hover:text-cyan-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+              <h3 className="text-base md:text-lg font-bold text-white mb-2">24/7 Customer Support</h3>
+              <p className="text-xs md:text-sm text-slate-400 font-light">
+                Dedicated technical support team available worldwide
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-12 md:space-y-20">

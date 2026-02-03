@@ -49,7 +49,7 @@ export async function POST(request) {
 
     switch (action) {
       case 'add-category': {
-        const { slug, name, description, image } = newData;
+        const { slug, name, description } = newData;
         
         // Check if category already exists
         if (currentData.categories.find(c => c.slug === slug)) {
@@ -62,7 +62,6 @@ export async function POST(request) {
         currentData.categories.push({
           slug,
           name,
-          image: image || '/placeholder.jpg',
           description,
           subcategories: []
         });
@@ -70,7 +69,7 @@ export async function POST(request) {
       }
 
       case 'add-subcategory': {
-        const { slug, name, description, image } = newData;
+        const { slug, name, description } = newData;
         const category = currentData.categories.find(c => c.slug === categorySlug);
         
         if (!category) {
@@ -91,15 +90,14 @@ export async function POST(request) {
         category.subcategories.push({
           slug,
           name,
-          image: image || '/placeholder.jpg',
           description,
-          subsubcategories: [] // Modified for 4-tier
+          subsubcategories: []
         });
         break;
       }
 
       case 'add-subsubcategory': {
-        const { slug, name, description, image } = newData;
+        const { slug, name, description } = newData;
         const category = currentData.categories.find(c => c.slug === categorySlug);
         
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
@@ -116,7 +114,6 @@ export async function POST(request) {
         subcategory.subsubcategories.push({
           slug,
           name,
-          image: image || '/placeholder.jpg',
           description,
           products: []
         });
@@ -129,9 +126,6 @@ export async function POST(request) {
 
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
         if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
-
-        const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
-        if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
 
         const product = {
           id: newData.id,
@@ -149,11 +143,26 @@ export async function POST(request) {
           }
         };
 
-        if (subsubcategory.products.find(p => p.id === product.id)) {
-          return NextResponse.json({ error: 'Product ID already exists' }, { status: 400 });
-        }
+        // If subsubcategorySlug is provided, add to sub-subcategory
+        if (subsubcategorySlug) {
+          const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
+          if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
 
-        subsubcategory.products.push(product);
+          if (subsubcategory.products.find(p => p.id === product.id)) {
+            return NextResponse.json({ error: 'Product ID already exists' }, { status: 400 });
+          }
+
+          subsubcategory.products.push(product);
+        } else {
+          // Add directly to subcategory
+          if (!subcategory.products) subcategory.products = [];
+          
+          if (subcategory.products.find(p => p.id === product.id)) {
+            return NextResponse.json({ error: 'Product ID already exists in this subcategory' }, { status: 400 });
+          }
+
+          subcategory.products.push(product);
+        }
         break;
       }
 
@@ -196,10 +205,17 @@ export async function POST(request) {
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
         if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
 
-        const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
-        if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
+        if (subsubcategorySlug) {
+          const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
+          if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
 
-        subsubcategory.products = subsubcategory.products.filter(p => p.id !== productId);
+          subsubcategory.products = subsubcategory.products.filter(p => p.id !== productId);
+        } else {
+          // Delete from subcategory
+          if (subcategory.products) {
+            subcategory.products = subcategory.products.filter(p => p.id !== productId);
+          }
+        }
         break;
       }
 

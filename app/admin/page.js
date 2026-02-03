@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { uploadImage } from '../utils/imageUpload';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -13,9 +14,9 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('categories');
 
   // Form states
-  const [newCategory, setNewCategory] = useState({ name: '', slug: '', description: '', image: '' });
-  const [newSubcategory, setNewSubcategory] = useState({ name: '', slug: '', description: '', image: '', categorySlug: '' });
-  const [newSubsubcategory, setNewSubsubcategory] = useState({ name: '', slug: '', description: '', image: '', categorySlug: '', subcategorySlug: '' });
+  const [newCategory, setNewCategory] = useState({ name: '', slug: '', description: '' });
+  const [newSubcategory, setNewSubcategory] = useState({ name: '', slug: '', description: '', categorySlug: '' });
+  const [newSubsubcategory, setNewSubsubcategory] = useState({ name: '', slug: '', description: '', categorySlug: '', subcategorySlug: '' });
   const [newProduct, setNewProduct] = useState({
     id: '',
     name: '',
@@ -30,13 +31,7 @@ export default function AdminPage() {
     variants: [] // Product variants
   });
   
-  // Image states
-  const [categoryImage, setCategoryImage] = useState(null);
-  const [categoryImagePreview, setCategoryImagePreview] = useState('');
-  const [subcategoryImage, setSubcategoryImage] = useState(null);
-  const [subcategoryImagePreview, setSubcategoryImagePreview] = useState('');
-  const [subsubcategoryImage, setSubsubcategoryImage] = useState(null);
-  const [subsubcategoryImagePreview, setSubsubcategoryImagePreview] = useState('');
+  // Image states (only for products)
   const [productImages, setProductImages] = useState([]);
   const [productImagePreviews, setProductImagePreviews] = useState([]);
   
@@ -95,59 +90,15 @@ export default function AdminPage() {
     setTimeout(() => setNotification(null), 5000);
   };
 
-  const handleImageUpload = async (file) => {
+  const handleImageUpload = async (file, uploadType = 'product', metadata = {}) => {
     if (!file) return null;
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('folder', 'products');
-
     try {
-      const response = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        return result.path;
-      } else {
-        showNotification('Failed to upload image', 'error');
-        return null;
-      }
+      const path = await uploadImage(file, uploadType, metadata);
+      return path;
     } catch (error) {
       showNotification('Error uploading image', 'error');
       return null;
-    }
-  };
-
-  const handleCategoryImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setCategoryImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setCategoryImagePreview(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubcategoryImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSubcategoryImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setSubcategoryImagePreview(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubsubcategoryImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSubsubcategoryImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setSubsubcategoryImagePreview(reader.result);
-      reader.readAsDataURL(file);
     }
   };
 
@@ -204,7 +155,12 @@ export default function AdminPage() {
     // Upload all variant images
     const imagePaths = [];
     for (const imageFile of variantImages) {
-      const path = await handleImageUpload(imageFile);
+      const path = await handleImageUpload(imageFile, 'product', {
+        categorySlug: newProduct.categorySlug,
+        subcategorySlug: newProduct.subcategorySlug,
+        subsubcategorySlug: newProduct.subsubcategorySlug,
+        productId: newProduct.id || 'variant'
+      });
       if (path) {
         imagePaths.push(path);
       }
@@ -249,25 +205,13 @@ export default function AdminPage() {
 
     setLoading(true);
 
-    let imagePath = newCategory.image;
-    if (categoryImage) {
-      imagePath = await handleImageUpload(categoryImage);
-      if (!imagePath) {
-        setLoading(false);
-        return;
-      }
-    }
-
     try {
       const response = await fetch('/api/admin/data', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'add-category',
-          data: {
-            ...newCategory,
-            image: imagePath
-          }
+          data: newCategory
         }),
       });
 
@@ -275,9 +219,7 @@ export default function AdminPage() {
       
       if (result.success) {
         showNotification('Category added successfully!', 'success');
-        setNewCategory({ name: '', slug: '', description: '', image: '' });
-        setCategoryImage(null);
-        setCategoryImagePreview('');
+        setNewCategory({ name: '', slug: '', description: '' });
         loadData();
       } else {
         showNotification(result.error || 'Failed to add category', 'error');
@@ -298,15 +240,6 @@ export default function AdminPage() {
 
     setLoading(true);
 
-    let imagePath = newSubcategory.image;
-    if (subcategoryImage) {
-      imagePath = await handleImageUpload(subcategoryImage);
-      if (!imagePath) {
-        setLoading(false);
-        return;
-      }
-    }
-
     try {
       const response = await fetch('/api/admin/data', {
         method: 'POST',
@@ -317,8 +250,7 @@ export default function AdminPage() {
           data: {
             name: newSubcategory.name,
             slug: newSubcategory.slug,
-            description: newSubcategory.description,
-            image: imagePath
+            description: newSubcategory.description
           }
         }),
       });
@@ -327,9 +259,7 @@ export default function AdminPage() {
       
       if (result.success) {
         showNotification('Subcategory added successfully!', 'success');
-        setNewSubcategory({ name: '', slug: '', description: '', image: '', categorySlug: '' });
-        setSubcategoryImage(null);
-        setSubcategoryImagePreview('');
+        setNewSubcategory({ name: '', slug: '', description: '', categorySlug: '' });
         loadData();
       } else {
         showNotification(result.error || 'Failed to add subcategory', 'error');
@@ -350,15 +280,6 @@ export default function AdminPage() {
 
     setLoading(true);
 
-    let imagePath = newSubsubcategory.image;
-    if (subsubcategoryImage) {
-      imagePath = await handleImageUpload(subsubcategoryImage);
-      if (!imagePath) {
-        setLoading(false);
-        return;
-      }
-    }
-
     try {
       const response = await fetch('/api/admin/data', {
         method: 'POST',
@@ -370,8 +291,7 @@ export default function AdminPage() {
           data: {
             name: newSubsubcategory.name,
             slug: newSubsubcategory.slug,
-            description: newSubsubcategory.description,
-            image: imagePath
+            description: newSubsubcategory.description
           }
         }),
       });
@@ -380,9 +300,7 @@ export default function AdminPage() {
       
       if (result.success) {
         showNotification('Sub-subcategory added successfully!', 'success');
-        setNewSubsubcategory({ name: '', slug: '', description: '', image: '', categorySlug: '', subcategorySlug: '' });
-        setSubsubcategoryImage(null);
-        setSubsubcategoryImagePreview('');
+        setNewSubsubcategory({ name: '', slug: '', description: '', categorySlug: '', subcategorySlug: '' });
         loadData();
       } else {
         showNotification(result.error || 'Failed to add sub-subcategory', 'error');
@@ -394,10 +312,23 @@ export default function AdminPage() {
     setLoading(false);
   };
 
+
   const handleAddProduct = async (e) => {
     e.preventDefault();
-    if (!newProduct.name || !newProduct.id || !newProduct.categorySlug || !newProduct.subcategorySlug || !newProduct.subsubcategorySlug) {
+    
+    // Validate required fields
+    if (!newProduct.name || !newProduct.id || !newProduct.categorySlug || !newProduct.subcategorySlug) {
       showNotification('Please fill in all required fields', 'error');
+      return;
+    }
+
+    // Get selected subcategory to check if it has sub-subcategories
+    const selectedSubcategory = getSubcategoriesForCategory(newProduct.categorySlug)
+      .find(s => s.slug === newProduct.subcategorySlug);
+    
+    // If subcategory has sub-subcategories, require selection
+    if (selectedSubcategory?.subsubcategories?.length > 0 && !newProduct.subsubcategorySlug) {
+      showNotification('Please select a sub-subcategory', 'error');
       return;
     }
 
@@ -411,7 +342,12 @@ export default function AdminPage() {
     // Upload all images
     const imagePaths = [];
     for (const imageFile of productImages) {
-      const path = await handleImageUpload(imageFile);
+      const path = await handleImageUpload(imageFile, 'product', {
+        categorySlug: newProduct.categorySlug,
+        subcategorySlug: newProduct.subcategorySlug,
+        subsubcategorySlug: newProduct.subsubcategorySlug,
+        productId: newProduct.id
+      });
       if (path) {
         imagePaths.push(path);
       }
@@ -431,7 +367,7 @@ export default function AdminPage() {
           action: 'add-product',
           categorySlug: newProduct.categorySlug,
           subcategorySlug: newProduct.subcategorySlug,
-          subsubcategorySlug: newProduct.subsubcategorySlug,
+          subsubcategorySlug: newProduct.subsubcategorySlug || null, // Can be null for subcategory-level products
           data: {
             id: newProduct.id,
             sku: newProduct.id, // Use ID as SKU
@@ -815,21 +751,6 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleCategoryImageChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                />
-                {categoryImagePreview && (
-                  <div className="mt-4">
-                    <img src={categoryImagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
-                  </div>
-                )}
-              </div>
-
               <button
                 type="submit"
                 disabled={loading}
@@ -920,21 +841,6 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Subcategory Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleSubcategoryImageChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                />
-                {subcategoryImagePreview && (
-                  <div className="mt-4">
-                    <img src={subcategoryImagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
-                  </div>
-                )}
-              </div>
-
               <button
                 type="submit"
                 disabled={loading}
@@ -959,7 +865,9 @@ export default function AdminPage() {
                             <p className="text-sm text-gray-500">{sub.slug}</p>
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-sm text-gray-600">{sub.products?.length || 0} products</span>
+                            <span className="text-sm text-gray-600">
+                              {(sub.products?.length || 0) + (sub.subsubcategories?.reduce((acc, subsub) => acc + (subsub.products?.length || 0), 0) || 0)} products
+                            </span>
                             <button
                               onClick={() => handleDeleteSubcategory(cat.slug, sub.slug)}
                               disabled={loading}
@@ -1049,21 +957,6 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleSubsubcategoryImageChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                />
-                {subsubcategoryImagePreview && (
-                  <div className="mt-4">
-                    <img src={subsubcategoryImagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
-                  </div>
-                )}
-              </div>
-
               <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg disabled:opacity-50">
                 {loading ? 'Adding...' : 'Add Sub-subcategory'}
               </button>
@@ -1145,22 +1038,38 @@ export default function AdminPage() {
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Sub-subcategory *</label>
-                  <select
-                    value={newProduct.subsubcategorySlug}
-                    onChange={(e) => setNewProduct({ ...newProduct, subsubcategorySlug: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                    disabled={!newProduct.subcategorySlug}
-                    required
-                  >
-                    <option value="">Select a sub-subcategory</option>
-                    {getSubcategoriesForCategory(newProduct.categorySlug)
-                        .find(s => s.slug === newProduct.subcategorySlug)?.subsubcategories?.map((subsub) => (
-                      <option key={subsub.slug} value={subsub.slug}>{subsub.name}</option>
-                    ))}
-                  </select>
-                </div>
+                {/* Sub-subcategory - Only show if subcategory has sub-subcategories */}
+                {newProduct.subcategorySlug && 
+                 getSubcategoriesForCategory(newProduct.categorySlug)
+                   .find(s => s.slug === newProduct.subcategorySlug)?.subsubcategories?.length > 0 ? (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Sub-subcategory *</label>
+                    <select
+                      value={newProduct.subsubcategorySlug}
+                      onChange={(e) => setNewProduct({ ...newProduct, subsubcategorySlug: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      disabled={!newProduct.subcategorySlug}
+                      required
+                    >
+                      <option value="">Select a sub-subcategory</option>
+                      {getSubcategoriesForCategory(newProduct.categorySlug)
+                          .find(s => s.slug === newProduct.subcategorySlug)?.subsubcategories?.map((subsub) => (
+                        <option key={subsub.slug} value={subsub.slug}>{subsub.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                ) : newProduct.subcategorySlug ? (
+                  <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
+                    <div className="flex items-start gap-2">
+                      <svg className="w-5 h-5 text-cyan-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="text-sm text-cyan-800">
+                        <strong>Note:</strong> This subcategory has no sub-subcategories. The product will be added directly to the subcategory.
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               {/* Product Basic Info */}
@@ -1432,6 +1341,39 @@ export default function AdminPage() {
                     {cat.subcategories?.map((sub) => (
                       <div key={sub.slug} className="ml-4 mb-4">
                         <h5 className="font-medium text-gray-600 mb-2">{sub.name}</h5>
+                        
+                        {/* Products directly in subcategory */}
+                        {sub.products && sub.products.length > 0 && (
+                          <div className="space-y-2 ml-4 mb-4">
+                            <h6 className="text-sm font-semibold text-cyan-600 mb-2">Products in {sub.name}</h6>
+                            {sub.products.map((product) => (
+                              <div key={product.id} className="flex items-center gap-4 p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors border-l-4 border-cyan-500">
+                                {product.image && (
+                                  <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded" />
+                                )}
+                                <div className="flex-1">
+                                  <p className="font-medium text-gray-900">{product.name}</p>
+                                  <p className="text-sm text-gray-500">{product.id}</p>
+                                </div>
+                                {product.images && (
+                                  <span className="text-xs text-cyan-600 bg-white px-2 py-1 rounded">
+                                    {product.images.length} images
+                                  </span>
+                                )}
+                                <button
+                                  onClick={() => handleDeleteProduct(cat.slug, sub.slug, null, product.id)}
+                                  disabled={loading}
+                                  className="px-3 py-1.5 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center gap-1"
+                                  title="Delete product"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Products in sub-subcategories */}
                         {sub.subsubcategories?.length > 0 ? (
                             <div className="space-y-2 ml-4">
                                 {sub.subsubcategories.map((subsub) => (
@@ -1470,9 +1412,9 @@ export default function AdminPage() {
                                     </div>
                                 ))}
                             </div>
-                        ) : (
-                            <div className="ml-4 text-sm text-gray-400 italic">No sub-subcategories</div>
-                        )}
+                        ) : !sub.products || sub.products.length === 0 ? (
+                            <div className="ml-4 text-sm text-gray-400 italic">No products or sub-subcategories</div>
+                        ) : null}
                       </div>
                     ))}
                   </div>

@@ -40,7 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Admin Panel - Don't deploy to production
-/app/admin/
-/app/api/admin/
-ADMIN_*.md
+# Admin Panel - Don't deploy to production (comment out these lines if you want admin in production)
+# /app/admin/
+# /app/api/admin/
+# ADMIN_*.md
+
+# Database backups - don't commit these
+/app/data/backups/
+
+# Large image backups
+/backups/
+*.tar.gz
+

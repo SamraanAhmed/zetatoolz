@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify-db": "node verify-database.js",
+    "backup-data": "node -e \"require('fs').copyFileSync('app/data/data.json', 'app/data/backups/data-' + new Date().toISOString().split('T')[0] + '.json'); console.log('✅ Backup created')\"",
+    "backup-images": "echo '💡 Manually copy public/images/ folder to backup location'"
   },
   "dependencies": {
     "next": "16.1.4",

@@ -162,50 +162,63 @@ export default function AboutPage() {
 
       {/* Certifications */}
       <div className="bg-gray-50 rounded-xl p-8 border border-gray-200 mb-16">
-        <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Certifications & Standards</h2>
-        <div className="grid md:grid-cols-3 gap-6 text-center">
-          <div>
-            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-cyan-600">
-              <span className="text-2xl font-bold text-cyan-600">ISO</span>
+        <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Certifications</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <img 
+                src="/Cirtificates/ISO-9001.png" 
+                alt="ISO 9001:2015 Certified" 
+                className="max-h-full max-w-full object-contain"
+              />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">ISO 9001:2015</h3>
-            <p className="text-sm text-gray-600">Quality Management Systems</p>
+            <h3 className="font-bold text-gray-900 text-center mb-2">ISO 9001:2015</h3>
           </div>
-          <div>
-            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-cyan-600">
-              <span className="text-2xl font-bold text-cyan-600">CE</span>
+          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <img 
+                src="/Cirtificates/CE.png" 
+                alt="CE Certified" 
+                className="max-h-full max-w-full object-contain"
+              />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">CE Certified</h3>
-            <p className="text-sm text-gray-600">European Conformity Standards</p>
+            <h3 className="font-bold text-gray-900 text-center mb-2">CE Certified</h3>
           </div>
-          <div>
-            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-cyan-600">
-              <span className="text-2xl font-bold text-cyan-600">FDA</span>
+          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <img 
+                src="/Cirtificates/SCCI.png" 
+                alt="SCCI Member" 
+                className="max-h-full max-w-full object-contain"
+              />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">FDA Registered</h3>
-            <p className="text-sm text-gray-600">U.S. Food & Drug Administration</p>
+            <h3 className="font-bold text-gray-900 text-center mb-2">SCCI Member</h3>
+          </div>
+          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <img 
+                src="/Cirtificates/SIMAP.png" 
+                alt="SIMAP Member" 
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <h3 className="font-bold text-gray-900 text-center mb-2">SIMAP Member</h3>
           </div>
         </div>
       </div>
 
       {/* CTA */}
       <div className="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl p-10 text-center text-white">
-        <h2 className="text-3xl font-bold mb-4">Partner With Us</h2>
+        <h2 className="text-3xl font-bold mb-4">Explore Our Full Range</h2>
         <p className="text-cyan-50 mb-6 max-w-2xl mx-auto text-lg">
-          Join thousands of professionals worldwide who trust Zeta Toolz for their precision instrument needs.
+          Discover our complete collection of precision instruments and find the perfect tools for your professional requirements.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex justify-center">
           <a 
-            href="/categories"
+            href="/products"
             className="bg-white text-cyan-600 font-bold py-3 px-8 rounded-lg hover:bg-cyan-50 transition"
           >
             Browse Catalog
-          </a>
-          <a 
-            href="/contact"
-            className="bg-cyan-700 text-white font-bold py-3 px-8 rounded-lg hover:bg-cyan-800 transition border-2 border-white"
-          >
-            Contact Us
           </a>
         </div>
       </div>
