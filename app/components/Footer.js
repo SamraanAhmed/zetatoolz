@@ -12,12 +12,12 @@ export default function Footer() {
           {/* Column 1: Identity & Contact */}
           <div>
             <div className="mb-6">
-              <div className="relative h-12 w-36">
+              <div className="relative h-16 w-40">
                 <Image 
                   src="/ZetaToolsMainLogo.svg" 
                   alt="ZetaToolz Logo" 
                   fill
-                  className="object-contain object-left brightness-0 invert"
+                  className="object-contain object-left"
                 />
               </div>
             </div>
@@ -29,7 +29,7 @@ export default function Footer() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <p className="text-slate-300">
-                  SHAHABPURA ROAD, OPP. GEPCO COLONY, TEHSIL & DISTRICT, SIALKOT 51310
+                  Shahab Pura Rd, Sialkot-51310 Pakistan.
                 </p>
               </div>
               
@@ -39,7 +39,7 @@ export default function Footer() {
                 </svg>
                 <div className="text-slate-300">
                   <p className="text-xs text-slate-400">WhatsApp</p>
-                  <p>03016866308</p>
+                  <p>+92 301 6866308</p>
                 </div>
               </a>
               
@@ -49,7 +49,7 @@ export default function Footer() {
                 </svg>
                 <div className="text-slate-300">
                   <p className="text-xs text-slate-400">Cell Phone</p>
-                  <p>03167967171</p>
+                  <p>+92 316 7967171</p>
                 </div>
               </div>
               
@@ -89,8 +89,6 @@ export default function Footer() {
               <li><a href="/privacy-policy" className="text-slate-400 hover:text-cyan-400 transition-colors">Privacy Policy</a></li>
               <li><a href="/terms" className="text-slate-400 hover:text-cyan-400 transition-colors">Terms & Conditions</a></li>
               <li><a href="/faq" className="text-slate-400 hover:text-cyan-400 transition-colors">FAQ</a></li>
-              <li><a href="/careers" className="text-slate-400 hover:text-cyan-400 transition-colors">Careers</a></li>
-              <li><a href="/testimonials" className="text-slate-400 hover:text-cyan-400 transition-colors">Testimonials</a></li>
             </ul>
           </div>
 
@@ -100,10 +98,8 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><a href="/login" className="text-slate-400 hover:text-cyan-400 transition-colors">Login / Register</a></li>
               <li><a href="/account" className="text-slate-400 hover:text-cyan-400 transition-colors">My Account</a></li>
-              <li><a href="/orders" className="text-slate-400 hover:text-cyan-400 transition-colors">Order History</a></li>
               <li><a href="/wishlist" className="text-slate-400 hover:text-cyan-400 transition-colors">Wish List</a></li>
               <li><a href="/newsletter" className="text-slate-400 hover:text-cyan-400 transition-colors">Newsletter</a></li>
-              <li><a href="/returns" className="text-slate-400 hover:text-cyan-400 transition-colors">Returns</a></li>
             </ul>
           </div>
 
@@ -112,11 +108,7 @@ export default function Footer() {
             <h4 className="text-lg font-semibold text-white mb-4">Customer Service</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="/contact" className="text-slate-400 hover:text-cyan-400 transition-colors">Contact Us</a></li>
-              <li><a href="/stores" className="text-slate-400 hover:text-cyan-400 transition-colors">Store Locations</a></li>
-              <li><a href="/sitemap" className="text-slate-400 hover:text-cyan-400 transition-colors">Site Map</a></li>
               <li><a href="/shipping" className="text-slate-400 hover:text-cyan-400 transition-colors">Delivery Information</a></li>
-              <li><a href="/track-order" className="text-slate-400 hover:text-cyan-400 transition-colors">Track Your Order</a></li>
-              <li><a href="/bulk-orders" className="text-slate-400 hover:text-cyan-400 transition-colors">Bulk Orders</a></li>
             </ul>
           </div>
         </div>

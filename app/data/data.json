@@ -12,18 +12,16 @@
                     "subsubcategories": [],
                     "products": [
                         {
-                            "id": "Test",
-                            "sku": "Test",
-                            "name": "Test",
-                            "price": "Market Rate",
-                            "description": "Test",
-                            "image": "/images/categories/beauty-instruments/subcategories/barber-scissors/subsubcategories/products/Test/1770103345713-moonlit_peaks-wallpaper-3840x2160.jpg",
+                            "id": "123",
+                            "name": "Name",
+                            "description": "123123123123123123123123123123123123123",
+                            "image": "/images/categories/beauty-instruments/subcategories/barber-scissors/subsubcategories/products/123/1770378714014-moonlit_peaks-wallpaper-3840x2160.jpg",
                             "images": [
-                                "/images/categories/beauty-instruments/subcategories/barber-scissors/subsubcategories/products/Test/1770103345713-moonlit_peaks-wallpaper-3840x2160.jpg"
+                                "/images/categories/beauty-instruments/subcategories/barber-scissors/subsubcategories/products/123/1770378714014-moonlit_peaks-wallpaper-3840x2160.jpg"
                             ],
                             "variants": [],
                             "details": {
-                                "overview": "Test",
+                                "overview": "123123123123123123123123123123123123123",
                                 "specifications": {},
                                 "features": []
                             }
@@ -69,25 +67,7 @@
                             "slug": "toe-nail-cutter",
                             "name": "Toe Nail Cutter",
                             "description": "",
-                            "products": [
-                                {
-                                    "id": "Testing",
-                                    "sku": "Testing",
-                                    "name": "Testing",
-                                    "price": "Market Rate",
-                                    "description": "Testing",
-                                    "image": "/images/categories/beauty-instruments/subcategories/nail-cutter/subsubcategories/toe-nail-cutter/products/Testing/1770103950973-beautiful_abstract_background-wallpaper-3840x2160.jpg",
-                                    "images": [
-                                        "/images/categories/beauty-instruments/subcategories/nail-cutter/subsubcategories/toe-nail-cutter/products/Testing/1770103950973-beautiful_abstract_background-wallpaper-3840x2160.jpg"
-                                    ],
-                                    "variants": [],
-                                    "details": {
-                                        "overview": "Testing",
-                                        "specifications": {},
-                                        "features": []
-                                    }
-                                }
-                            ]
+                            "products": []
                         },
                         {
                             "slug": "acrylic-nail-cutter",
@@ -173,49 +153,6 @@
             ]
         },
         {
-            "slug": "dental-instruments",
-            "name": "Dental Instruments",
-            "description": "",
-            "subcategories": [
-                {
-                    "slug": "oral-surgery",
-                    "name": "Oral Surgery",
-                    "description": "",
-                    "subsubcategories": []
-                },
-                {
-                    "slug": "scissors",
-                    "name": "Scissors",
-                    "description": "",
-                    "subsubcategories": []
-                },
-                {
-                    "slug": "elevators",
-                    "name": "Elevators",
-                    "description": "",
-                    "subsubcategories": []
-                },
-                {
-                    "slug": "needle-holders",
-                    "name": "Needle holders",
-                    "description": "",
-                    "subsubcategories": []
-                },
-                {
-                    "slug": "needle-cases",
-                    "name": "Needle Cases",
-                    "description": "",
-                    "subsubcategories": []
-                },
-                {
-                    "slug": "instrument-for-removal-of-roots",
-                    "name": "Instrument for Removal of roots",
-                    "description": "",
-                    "subsubcategories": []
-                }
-            ]
-        },
-        {
             "slug": "embroidery",
             "name": "Embroidery",
             "description": "",
@@ -247,6 +184,19 @@
                 {
                     "slug": "other-tools",
                     "name": "Other tools",
+                    "description": "",
+                    "subsubcategories": []
+                }
+            ]
+        },
+        {
+            "slug": "dental-instruments",
+            "name": " Dental Instruments",
+            "description": "",
+            "subcategories": [
+                {
+                    "slug": "oral-surgery",
+                    "name": "Oral Surgery",
                     "description": "",
                     "subsubcategories": []
                 }

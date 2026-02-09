@@ -19,8 +19,12 @@ export default function FAQPage() {
           a: "You can request a cart in two ways: 1) Click the 'Email Inquiry' button on any product page to request pricing for individual items, or 2) Add multiple items to your Cart and click 'Request Cart for All Items' to get bulk pricing. Our sales team will respond within 24 hours with current market rates."
         },
         {
+          q: "How do I request a cart?",
+          a: "You can request a cart in two ways: 1) Click the 'Email Inquiry' button on any product page to request pricing for individual items, or 2) Add multiple items to your Cart and click 'Request Cart for All Items' to get bulk pricing. Our sales team will respond within 24 hours with current market rates."
+        },
+        {
           q: "What is the minimum order quantity (MOQ)?",
-          a: "Our MOQ varies by product type. Generally, for individual items, there's no strict minimum. However, bulk orders of 100+ units qualify for volume discounts. Contact our sales team at sales@zetatoolz.com for specific MOQ information on your products of interest."
+          a: "Our MOQ varies by product type. Generally, for individual items, there's no strict minimum. However, bulk orders of 100+ units qualify for volume discounts. Contact our sales team at info@zetatoolz.com for specific MOQ information on your products of interest."
         },
         {
           q: "Do you offer bulk discounts?",
@@ -96,7 +100,7 @@ export default function FAQPage() {
         },
         {
           q: "Do you work with distributors?",
-          a: "Yes, we actively seek partnerships with distributors worldwide. We offer special pricing, dropshipping support, and marketing materials for our distribution partners. If you're interested in becoming a distributor, please contact us at sales@zetatoolz.com."
+          a: "Yes, we actively seek partnerships with distributors worldwide. We offer special pricing, dropshipping support, and marketing materials for our distribution partners. If you're interested in becoming a distributor, please contact us at info@zetatoolz.com."
         },
         {
           q: "Can I visit your factory?",
@@ -191,28 +195,20 @@ export default function FAQPage() {
       <div className="mt-12 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl p-8 text-center text-white">
         <h3 className="text-2xl font-bold mb-3">Still Have Questions?</h3>
         <p className="text-cyan-50 mb-6">
-          Our team is available 24/7 to assist you with any inquiries
+          Get in touch with our team for personalized assistance
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a 
-            href="mailto:sales@zetatoolz.com"
-            className="inline-flex items-center justify-center gap-2 bg-white text-cyan-600 font-bold py-3 px-8 rounded-lg hover:bg-cyan-50 transition"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            Email Us
-          </a>
-          <a 
-            href="tel:+15551234567"
-            className="inline-flex items-center justify-center gap-2 bg-cyan-700 text-white font-bold py-3 px-8 rounded-lg hover:bg-cyan-800 transition border-2 border-white"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-            Call Us
-          </a>
-        </div>
+        <a 
+          href="/contact"
+          className="inline-flex items-center justify-center gap-2 text-sm font-medium text-white rounded transition px-6 py-3"
+          style={{ backgroundColor: '#00afef' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0099d6'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#00afef'}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Contact Us
+        </a>
       </div>
     </div>
   );

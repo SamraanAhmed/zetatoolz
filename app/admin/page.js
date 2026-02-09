@@ -370,9 +370,7 @@ export default function AdminPage() {
           subsubcategorySlug: newProduct.subsubcategorySlug || null, // Can be null for subcategory-level products
           data: {
             id: newProduct.id,
-            sku: newProduct.id, // Use ID as SKU
             name: newProduct.name,
-            price: 'Market Rate', // Default price
             description: newProduct.description,
             image: imagePaths[0], // First image as main
             images: imagePaths, // All images

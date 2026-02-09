@@ -9,15 +9,56 @@ export default function AboutPage() {
 
       {/* Hero Section */}
       <div className="mb-16">
-        <h1 className="text-5xl font-bold text-gray-900 mb-6">About Zeta Toolz</h1>
-        <p className="text-xl text-gray-600 leading-relaxed max-w-4xl">
-          Leading the industry in precision instrument manufacturing since 1995. We specialize in surgical-grade 
-          beauty instruments, medical tools, and industrial hardware for professionals worldwide.
-        </p>
+        <h1 className="text-5xl font-bold text-gray-900 mb-6">About Zetatoolz</h1>
       </div>
-
+{/* Certifications */}
+      <div className="bg-gray-50 rounded-xl p-8 border border-gray-200 mb-16">
+        <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Certifications</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <img 
+                src="/Cirtificates/ISO-9001.png" 
+                alt="ISO 9001:2015 Certified" 
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <h3 className="font-bold text-gray-900 text-center mb-2">ISO 9001:2015</h3>
+          </div>
+          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <img 
+                src="/Cirtificates/CE.png" 
+                alt="CE Certified" 
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <h3 className="font-bold text-gray-900 text-center mb-2">CE Certified</h3>
+          </div>
+          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <img 
+                src="/Cirtificates/SCCI.png" 
+                alt="SCCI Member" 
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <h3 className="font-bold text-gray-900 text-center mb-2">SCCI Member</h3>
+          </div>
+          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
+            <div className="h-32 flex items-center justify-center mb-4">
+              <img 
+                src="/Cirtificates/SIMAP.png" 
+                alt="SIMAP Member" 
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <h3 className="font-bold text-gray-900 text-center mb-2">SIMAP Member</h3>
+          </div>
+        </div>
+      </div>
       {/* Stats Section */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+      {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
         <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-xl p-6 text-center border border-cyan-200">
           <div className="text-4xl font-bold text-cyan-600 mb-2">28+</div>
           <div className="text-gray-700 font-medium">Years Experience</div>
@@ -34,7 +75,7 @@ export default function AboutPage() {
           <div className="text-4xl font-bold text-cyan-600 mb-2">100%</div>
           <div className="text-gray-700 font-medium">Quality Certified</div>
         </div>
-      </div>
+      </div> */}
 
       {/* Our Story */}
       <div className="mb-16">
@@ -160,52 +201,6 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Certifications */}
-      <div className="bg-gray-50 rounded-xl p-8 border border-gray-200 mb-16">
-        <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Certifications</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <div className="h-32 flex items-center justify-center mb-4">
-              <img 
-                src="/Cirtificates/ISO-9001.png" 
-                alt="ISO 9001:2015 Certified" 
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <h3 className="font-bold text-gray-900 text-center mb-2">ISO 9001:2015</h3>
-          </div>
-          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <div className="h-32 flex items-center justify-center mb-4">
-              <img 
-                src="/Cirtificates/CE.png" 
-                alt="CE Certified" 
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <h3 className="font-bold text-gray-900 text-center mb-2">CE Certified</h3>
-          </div>
-          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <div className="h-32 flex items-center justify-center mb-4">
-              <img 
-                src="/Cirtificates/SCCI.png" 
-                alt="SCCI Member" 
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <h3 className="font-bold text-gray-900 text-center mb-2">SCCI Member</h3>
-          </div>
-          <div className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <div className="h-32 flex items-center justify-center mb-4">
-              <img 
-                src="/Cirtificates/SIMAP.png" 
-                alt="SIMAP Member" 
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <h3 className="font-bold text-gray-900 text-center mb-2">SIMAP Member</h3>
-          </div>
-        </div>
-      </div>
 
       {/* CTA */}
       <div className="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl p-10 text-center text-white">

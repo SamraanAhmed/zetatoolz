@@ -74,8 +74,7 @@ export default function CategoriesPage() {
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-2">Need Help Finding Products?</h3>
             <p className="text-gray-700">
-              Our three-tier navigation system guides you from main categories to sub-categories, 
-              and finally to specific products. Contact our sales team at <a href="mailto:sales@zetatoolz.com" className="text-cyan-600 hover:text-cyan-700 font-semibold">sales@zetatoolz.com</a> for assistance.
+              Contact our sales team at <a href="mailto:info@zetatoolz.com" className="text-cyan-600 hover:text-cyan-700 font-semibold">info@zetatoolz.com</a> for assistance.
             </p>
           </div>
         </div>

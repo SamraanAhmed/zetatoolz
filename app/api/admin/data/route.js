@@ -26,6 +26,66 @@ function writeData(data) {
   }
 }
 
+// Helper function to delete product images from file system
+function deleteProductImages(product) {
+  try {
+    // Delete all product images
+    if (product.images && Array.isArray(product.images)) {
+      product.images.forEach(imagePath => {
+        if (imagePath && imagePath.startsWith('/images/')) {
+          const fullPath = path.join(process.cwd(), 'public', imagePath);
+          if (fs.existsSync(fullPath)) {
+            fs.unlinkSync(fullPath);
+            console.log(`Deleted image: ${fullPath}`);
+          }
+        }
+      });
+    }
+    
+    // Delete variant images if they exist
+    if (product.variants && Array.isArray(product.variants)) {
+      product.variants.forEach(variant => {
+        if (variant.images && Array.isArray(variant.images)) {
+          variant.images.forEach(imagePath => {
+            if (imagePath && imagePath.startsWith('/images/')) {
+              const fullPath = path.join(process.cwd(), 'public', imagePath);
+              if (fs.existsSync(fullPath)) {
+                fs.unlinkSync(fullPath);
+                console.log(`Deleted variant image: ${fullPath}`);
+              }
+            }
+          });
+        }
+      });
+    }
+
+    // Try to delete the product folder if it's empty
+    if (product.images && product.images.length > 0) {
+      const firstImagePath = product.images[0];
+      if (firstImagePath && firstImagePath.startsWith('/images/')) {
+        const productFolderPath = path.join(process.cwd(), 'public', path.dirname(firstImagePath));
+        try {
+          // Check if folder exists and is empty
+          if (fs.existsSync(productFolderPath)) {
+            const files = fs.readdirSync(productFolderPath);
+            if (files.length === 0) {
+              fs.rmdirSync(productFolderPath);
+              console.log(`Deleted empty product folder: ${productFolderPath}`);
+            }
+          }
+        } catch (err) {
+          console.log(`Could not delete product folder: ${err.message}`);
+        }
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error deleting product images:', error);
+    return false;
+  }
+}
+
 // GET - Retrieve all data
 export async function GET() {
   try {
@@ -129,9 +189,7 @@ export async function POST(request) {
 
         const product = {
           id: newData.id,
-          sku: newData.sku,
           name: newData.name,
-          price: newData.price,
           description: newData.description,
           image: newData.image,
           images: newData.images || [newData.image],
@@ -183,9 +241,7 @@ export async function POST(request) {
 
         subsubcategory.products[productIndex] = {
           id: newData.id,
-          sku: newData.sku,
           name: newData.name,
-          price: newData.price,
           description: newData.description,
           image: newData.image,
           details: {
@@ -205,14 +261,35 @@ export async function POST(request) {
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
         if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
 
+        // Find and delete the product images
+        let productToDelete = null;
+        
         if (subsubcategorySlug) {
           const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
           if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
 
+          // Find the product before deleting
+          productToDelete = subsubcategory.products.find(p => p.id === productId);
+          
+          if (productToDelete) {
+            // Delete product images from file system
+            deleteProductImages(productToDelete);
+          }
+          
+          // Remove product from data
           subsubcategory.products = subsubcategory.products.filter(p => p.id !== productId);
         } else {
           // Delete from subcategory
           if (subcategory.products) {
+            // Find the product before deleting
+            productToDelete = subcategory.products.find(p => p.id === productId);
+            
+            if (productToDelete) {
+              // Delete product images from file system
+              deleteProductImages(productToDelete);
+            }
+            
+            // Remove product from data
             subcategory.products = subcategory.products.filter(p => p.id !== productId);
           }
         }

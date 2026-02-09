@@ -14,7 +14,6 @@ export default function FilterSidebar({
   showSubcategories = false,
 }) {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedMaterial, setSelectedMaterial] = useState([]);
   const [selectedCertification, setSelectedCertification] = useState([]);
   const [selectedFinish, setSelectedFinish] = useState([]);

@@ -40,8 +40,7 @@ function SearchResults() {
           product.description?.toLowerCase().includes(searchTerm) ||
           product.category?.toLowerCase().includes(searchTerm) ||
           product.subcategory?.toLowerCase().includes(searchTerm) ||
-          product.id?.toLowerCase().includes(searchTerm) ||
-          product.sku?.toLowerCase().includes(searchTerm);
+          product.id?.toLowerCase().includes(searchTerm);
 
         return matchesCategory && matchesQuery;
       });

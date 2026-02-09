@@ -91,7 +91,7 @@ export default function SubSubcategoriesPageClient({ categorySlug, subcategorySl
             Contact our sales team for bulk orders, custom requirements, or current market pricing
           </p>
           <a 
-            href={`mailto:sales@zetatoolz.com?subject=Cart Request for ${subcategory.name}`}
+            href={`mailto:info@zetatoolz.com?subject=Cart Request for ${subcategory.name}`}
             className="inline-flex items-center gap-2 bg-white text-cyan-600 font-bold py-3 px-8 rounded-lg hover:bg-cyan-50 transition"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,13 +128,12 @@ export default function SubSubcategoriesPageClient({ categorySlug, subcategorySl
             className="group bg-white rounded-lg overflow-hidden border-2 border-gray-200 hover:border-cyan-500 hover:shadow-xl transition-all duration-300"
           >
             <div className="h-48 bg-gray-100 relative overflow-hidden">
-
               <img
-                src={subsub.image || 'https://placehold.co/600x400/f3f4f6/0891b2?text=' + encodeURIComponent(subsub.name)}
+                src={subsub.products?.[0]?.image || 'https://placehold.co/600x400/f3f4f6/0891b2?text=' + encodeURIComponent(subsub.name)}
                 alt={subsub.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 onError={(e) => {
-                  e.target.style.display = 'none';
+                  e.target.src = 'https://placehold.co/600x400/f3f4f6/0891b2?text=' + encodeURIComponent(subsub.name);
                 }}
               />
               
@@ -143,7 +142,7 @@ export default function SubSubcategoriesPageClient({ categorySlug, subcategorySl
               
               {/* Badge */}
               <div className="absolute top-3 right-3 bg-cyan-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
-                View Products
+                {subsub.products?.length || 0} Products
               </div>
             </div>
 

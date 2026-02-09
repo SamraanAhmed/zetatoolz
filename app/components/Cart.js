@@ -1,8 +1,6 @@
 import React from 'react';
 
 const Cart = ({ cartItems, onRemoveFromCart }) => {
-  const total = cartItems.reduce((sum, item) => sum + item.price, 0);
-
   return (
     <div className="cart">
       <h2>Shopping Cart</h2>
@@ -13,12 +11,11 @@ const Cart = ({ cartItems, onRemoveFromCart }) => {
           <ul>
             {cartItems.map((item) => (
               <li key={item.id}>
-                <p>{item.name} - ${item.price}</p>
+                <p>{item.name}</p>
                 <button onClick={() => onRemoveFromCart(item.id)}>Remove</button>
               </li>
             ))}
           </ul>
-          <p>Total: ${total}</p>
         </>
       )}
     </div>

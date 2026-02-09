@@ -53,11 +53,11 @@ Thank you.`;
     
     if (isMobile) {
       // On mobile, use mailto link which opens the default email app
-      const mailtoURL = `mailto:xeedemo1@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailtoURL = `mailto:info@zetatoolz.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.location.href = mailtoURL;
     } else {
       // On desktop, use Gmail compose URL
-      const gmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent('xeedemo1@gmail.com')}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const gmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent('info@zetatoolz.com')}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.open(gmailURL, '_blank');
     }
   };
@@ -308,10 +308,6 @@ Thank you.`;
               <div className="space-y-4">
                 <p className="text-gray-700 leading-relaxed">
                   {product.details?.overview || product.description}
-                </p>
-                <p className="text-gray-700 leading-relaxed">
-                  Our instruments are trusted by professionals worldwide and come with a satisfaction guarantee. 
-                  Suitable for use in medical, beauty, industrial, and jewelry applications depending on the specific model.
                 </p>
               </div>
             </div>

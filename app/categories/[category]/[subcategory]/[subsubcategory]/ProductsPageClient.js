@@ -90,7 +90,7 @@ export default function ProductsPageClient({ categorySlug, subcategorySlug, subs
           Contact our sales team for bulk orders, custom requirements, or current market pricing
         </p>
         <a 
-          href={`mailto:sales@zetatoolz.com?subject=Cart Request for ${subsubcategory.name}`}
+          href={`mailto:info@zetatoolz.com?subject=Cart Request for ${subsubcategory.name}`}
           className="inline-flex items-center gap-2 bg-white text-cyan-600 font-bold py-3 px-8 rounded-lg hover:bg-cyan-50 transition"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -46,7 +46,7 @@ export default function Home() {
       categorySlug,
       categoryName: category.name,
       description: category.description,
-      bgColor: colorMap[categorySlug] || '#2596be',
+      bgColor: colorMap[categorySlug] || '#8fcfe9ff',
       viewAllLink: `/categories/${categorySlug}`,
       subcategories: topSubcategories
     };
@@ -302,8 +302,7 @@ export default function Home() {
       <section>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 md:mb-10 gap-4">
           <div>
-             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Featured Precision Instruments</h2>
-             <p className="text-sm sm:text-base text-gray-600">ISO certified surgical-grade tools for professionals</p>
+             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Featured Instruments</h2>
           </div>
           <Link href="/products" className="text-cyan-600 hover:text-cyan-700 font-medium flex items-center gap-1 group text-sm sm:text-base whitespace-nowrap">
             View Full Catalog <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
@@ -317,31 +316,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Newsletter / CTA Section */}
-      <section className="bg-gradient-to-br from-cyan-600 to-blue-600 rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 text-center relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full mix-blend-overlay filter blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full mix-blend-overlay filter blur-3xl"></div>
-        
-        <div className="relative z-10 max-w-2xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 md:mb-4">Partner with Us</h2>
-          <p className="text-sm sm:text-base text-white/90 mb-6 md:mb-8">Join manufacturers and distributors worldwide. Get exclusive pricing, bulk order discounts, and priority support.</p>
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-             <input 
-               type="email" 
-               placeholder="Enter your business email" 
-               className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-white text-gray-900 border-2 border-transparent focus:border-cyan-300 focus:outline-none w-full sm:w-auto sm:min-w-[300px] text-sm sm:text-base" 
-             />
-             <button 
-               className="text-white font-bold py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
-               style={{ backgroundColor: '#00afef' }}
-               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0099d6'}
-               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#00afef'}
-             >
-               Request Catalog
-             </button>
-          </div>
+       {/* CTA */}
+      <div className="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl p-10 text-center text-white">
+        <h2 className="text-3xl font-bold mb-4">Explore Our Full Range</h2>
+        <p className="text-cyan-50 mb-6 max-w-2xl mx-auto text-lg">
+          Discover our complete collection of precision instruments and find the perfect tools for your professional requirements.
+        </p>
+        <div className="flex justify-center">
+          <a 
+            href="/products"
+            className="bg-white text-cyan-600 font-bold py-3 px-8 rounded-lg hover:bg-cyan-50 transition"
+          >
+            Browse Catalog
+          </a>
         </div>
-      </section>
+      </div>
 
       {/* Trust Signals / Features Bar */}
       <section className="bg-slate-800 rounded-xl md:rounded-2xl shadow-lg -mt-6 md:-mt-10 relative z-10">
