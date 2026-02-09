@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 export const metadata = {
-  title: 'Zeta Toolz | Precision Instruments & Industrial Tools Manufacturer',
+  title: 'Zeta Toolz',
   description: 'Leading manufacturer of surgical-grade beauty instruments, medical tools, and industrial hardware. ISO 9001 & CE certified precision instruments for professionals worldwide.',
 };
 
