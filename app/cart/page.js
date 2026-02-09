@@ -17,23 +17,22 @@ export default function CartPage() {
     // Build product list for email
     let productList = '';
     cart.forEach((item, index) => {
-      productList += `${index + 1}. ${item.name}\n`;
-      productList += `   Product ID: ${item.id}\n`;
-      productList += `   Quantity: ${item.quantity}\n\n`;
+      productList += `${item.name} — Article No: ${item.id}\n`;
     });
 
-    const subject = `Bulk Cart Request - ${cart.length} Items`;
+    const subject = `Request for Quote – Cart Inquiry`;
     const body = `Hello,
 
-I would like to request a bulk cart for the following items:
+I am interested in receiving a quote for the products in my cart. Please find the details below:
 
+Products:
 ${productList}
-Total Items: ${cart.length}
-Total Quantity: ${cart.reduce((sum, item) => sum + item.quantity, 0)} units
+Could you please provide the pricing and availability for these products?
 
-Please provide current market pricing for today, ${today}.
+Thank you for your assistance.
 
-Thank you for your assistance.`;
+Best regards,
+Customer`;
 
     // Check if user is on mobile device
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -161,7 +160,7 @@ Thank you for your assistance.`;
                 <div className="bg-cyan-50 rounded-lg p-4 mb-4">
                   <p className="text-sm text-cyan-800 font-semibold mb-1">💼 Pricing Information</p>
                   <p className="text-xs text-cyan-700">
-                    Market rates updated daily. Request a cart to receive current pricing for your specific requirements.
+                  Request a cart to receive current pricing for your specific requirements.
                   </p>
                 </div>
               </div>

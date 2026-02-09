@@ -128,8 +128,8 @@ export default function AboutPage() {
       </div>
 
       {/* Mission & Vision */}
-      <div className="grid md:grid-cols-2 gap-8 mb-16">
-        <div className="bg-gradient-to-br from-cyan-600 to-blue-600 rounded-xl p-8 text-white">
+      <div className="grid md:grid-cols-2 gap-8 mb-16" >
+        <div className="rounded-xl p-8 text-white" style={{ backgroundColor: '#4FB9E3' }}>
           <div className="flex items-center gap-3 mb-4">
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -202,8 +202,8 @@ export default function AboutPage() {
       </div>
 
 
-      {/* CTA */}
-      <div className="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl p-10 text-center text-white">
+             {/* CTA */}
+      <div className="rounded-xl p-10 text-center text-white" style={{ backgroundColor: '#4FB9E3' }}>
         <h2 className="text-3xl font-bold mb-4">Explore Our Full Range</h2>
         <p className="text-cyan-50 mb-6 max-w-2xl mx-auto text-lg">
           Discover our complete collection of precision instruments and find the perfect tools for your professional requirements.

@@ -114,7 +114,7 @@ export default function Footer() {
             <h4 className="text-lg font-semibold text-white mb-4">Customer Service</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="/contact" className="text-slate-400 hover:text-cyan-400 transition-colors">Contact Us</a></li>
-              <li><a href="/shipping" className="text-slate-400 hover:text-cyan-400 transition-colors">Delivery Information</a></li>
+              <li><a href="https://mail.google.com/mail/?view=cm&fs=1&to=info@zetatoolz.com&su=Order%20Status%20%26%20Tracking%20Request&body=Hello%2C%0A%0AI%20would%20like%20to%20request%20an%20update%20on%20my%20recent%20order.%20Please%20find%20the%20order%20details%20below%3A%0A%0AOrder%20Date%3A%20%7B%7BORDER_DATE%7D%7D%0A%0AProducts%20Ordered%3A%0A%7B%7BPRODUCT_1_NAME%7D%7D%20%E2%80%94%20Article%20No%3A%20%7B%7BARTICLE_1_NUMBER%7D%7D%0A%7B%7BPRODUCT_2_NAME%7D%7D%20%E2%80%94%20Article%20No%3A%20%7B%7BARTICLE_2_NUMBER%7D%7D%0A%7B%7BPRODUCT_3_NAME%7D%7D%20%E2%80%94%20Article%20No%3A%20%7B%7BARTICLE_3_NUMBER%7D%7D%0A%7B%7BPRODUCT_4_NAME%7D%7D%20%E2%80%94%20Article%20No%3A%20%7B%7BARTICLE_4_NUMBER%7D%7D%0A%7B%7BPRODUCT_5_NAME%7D%7D%20%E2%80%94%20Article%20No%3A%20%7B%7BARTICLE_5_NUMBER%7D%7D%0A%0AKindly%20share%20the%20current%20status%20of%20the%20order%20and%20the%20tracking%20information%2C%20if%20available.%0A%0AThank%20you.%0A%0ABest%20regards%2C%0ACustomer" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors">Delivery Information</a></li>
             </ul>
           </div>
         </div>
