@@ -166,13 +166,12 @@ export default function Home() {
     <div className="space-y-12 md:space-y-20">
       {/* Hero Carousel Section */}
       <section className="relative h-[500px] sm:h-[550px] lg:h-[600px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl">
-        {/* Mobile: Solid Background, Desktop: Diagonal Split */}
+        {/* Background with gradient */}
         <div 
           className="absolute inset-0 transition-colors duration-700"
           style={{
-            background: isMobile 
-              ? slides[currentSlide].bgColor 
-              : `linear-gradient(135deg, ${slides[currentSlide].bgColor} 0%, ${slides[currentSlide].bgColor} 58%, #ffffff 58%, #ffffff 100%)`
+            background: '#4fb9e3',
+            backgroundImage: 'linear-gradient(90deg, rgba(79, 185, 227, 1) 0%, rgba(255, 255, 255, 1) 64%)'
           }}
         />
 
