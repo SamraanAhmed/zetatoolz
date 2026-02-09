@@ -316,7 +316,7 @@ export default function Home() {
       </section>
 
        {/* CTA */}
-      <div className="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl p-10 text-center text-white">
+      <div className="rounded-xl p-10 text-center text-white" style={{ backgroundColor: '#4FB9E3' }}>
         <h2 className="text-3xl font-bold mb-4">Explore Our Full Range</h2>
         <p className="text-cyan-50 mb-6 max-w-2xl mx-auto text-lg">
           Discover our complete collection of precision instruments and find the perfect tools for your professional requirements.
