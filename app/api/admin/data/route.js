@@ -1,80 +1,44 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import connectDB from '../../../../lib/mongodb';
+import Category from '../../../../lib/models/Category';
+import { deleteImage } from '../../../../lib/cloudinary';
 
-const DATA_FILE_PATH = path.join(process.cwd(), 'app', 'data', 'data.json');
-
-// Helper function to read data
-function readData() {
+// GET - Retrieve all data
+export async function GET() {
   try {
-    const fileContents = fs.readFileSync(DATA_FILE_PATH, 'utf8');
-    return JSON.parse(fileContents);
+    await connectDB();
+    const categories = await Category.find({}).lean();
+    return NextResponse.json({ categories });
   } catch (error) {
-    console.error('Error reading data file:', error);
-    return { categories: [] };
+    console.error('Error reading data:', error);
+    return NextResponse.json(
+      { error: 'Failed to read data' },
+      { status: 500 }
+    );
   }
 }
 
-// Helper function to write data
-function writeData(data) {
-  try {
-    fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 4), 'utf8');
-    return true;
-  } catch (error) {
-    console.error('Error writing data file:', error);
-    return false;
-  }
-}
-
-// Helper function to delete product images from file system
-function deleteProductImages(product) {
+// Helper function to delete product images from Cloudinary
+async function deleteProductImages(product) {
   try {
     // Delete all product images
     if (product.images && Array.isArray(product.images)) {
-      product.images.forEach(imagePath => {
-        if (imagePath && imagePath.startsWith('/images/')) {
-          const fullPath = path.join(process.cwd(), 'public', imagePath);
-          if (fs.existsSync(fullPath)) {
-            fs.unlinkSync(fullPath);
-            console.log(`Deleted image: ${fullPath}`);
-          }
+      for (const imageUrl of product.images) {
+        if (imageUrl && imageUrl.includes('cloudinary.com')) {
+          await deleteImage(imageUrl);
         }
-      });
+      }
     }
     
     // Delete variant images if they exist
     if (product.variants && Array.isArray(product.variants)) {
-      product.variants.forEach(variant => {
+      for (const variant of product.variants) {
         if (variant.images && Array.isArray(variant.images)) {
-          variant.images.forEach(imagePath => {
-            if (imagePath && imagePath.startsWith('/images/')) {
-              const fullPath = path.join(process.cwd(), 'public', imagePath);
-              if (fs.existsSync(fullPath)) {
-                fs.unlinkSync(fullPath);
-                console.log(`Deleted variant image: ${fullPath}`);
-              }
-            }
-          });
-        }
-      });
-    }
-
-    // Try to delete the product folder if it's empty
-    if (product.images && product.images.length > 0) {
-      const firstImagePath = product.images[0];
-      if (firstImagePath && firstImagePath.startsWith('/images/')) {
-        const productFolderPath = path.join(process.cwd(), 'public', path.dirname(firstImagePath));
-        try {
-          // Check if folder exists and is empty
-          if (fs.existsSync(productFolderPath)) {
-            const files = fs.readdirSync(productFolderPath);
-            if (files.length === 0) {
-              fs.rmdirSync(productFolderPath);
-              console.log(`Deleted empty product folder: ${productFolderPath}`);
+          for (const imageUrl of variant.images) {
+            if (imageUrl && imageUrl.includes('cloudinary.com')) {
+              await deleteImage(imageUrl);
             }
           }
-        } catch (err) {
-          console.log(`Could not delete product folder: ${err.message}`);
         }
       }
     }
@@ -86,40 +50,27 @@ function deleteProductImages(product) {
   }
 }
 
-// GET - Retrieve all data
-export async function GET() {
-  try {
-    const data = readData();
-    return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to read data' },
-      { status: 500 }
-    );
-  }
-}
-
 // POST - Add or update data
 export async function POST(request) {
   try {
+    await connectDB();
     const body = await request.json();
     const { action, categorySlug, subcategorySlug, subsubcategorySlug, data: newData } = body;
-
-    const currentData = readData();
 
     switch (action) {
       case 'add-category': {
         const { slug, name, description } = newData;
         
         // Check if category already exists
-        if (currentData.categories.find(c => c.slug === slug)) {
+        const existing = await Category.findOne({ slug });
+        if (existing) {
           return NextResponse.json(
             { error: 'Category already exists' },
             { status: 400 }
           );
         }
 
-        currentData.categories.push({
+        await Category.create({
           slug,
           name,
           description,
@@ -130,7 +81,7 @@ export async function POST(request) {
 
       case 'add-subcategory': {
         const { slug, name, description } = newData;
-        const category = currentData.categories.find(c => c.slug === categorySlug);
+        const category = await Category.findOne({ slug: categorySlug });
         
         if (!category) {
           return NextResponse.json(
@@ -153,12 +104,13 @@ export async function POST(request) {
           description,
           subsubcategories: []
         });
+        await category.save();
         break;
       }
 
       case 'add-subsubcategory': {
         const { slug, name, description } = newData;
-        const category = currentData.categories.find(c => c.slug === categorySlug);
+        const category = await Category.findOne({ slug: categorySlug });
         
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
@@ -177,11 +129,12 @@ export async function POST(request) {
           description,
           products: []
         });
+        await category.save();
         break;
       }
 
       case 'add-product': {
-        const category = currentData.categories.find(c => c.slug === categorySlug);
+        const category = await Category.findOne({ slug: categorySlug });
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
@@ -221,11 +174,12 @@ export async function POST(request) {
 
           subcategory.products.push(product);
         }
+        await category.save();
         break;
       }
 
       case 'update-product': {
-        const category = currentData.categories.find(c => c.slug === categorySlug);
+        const category = await Category.findOne({ slug: categorySlug });
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
@@ -250,66 +204,58 @@ export async function POST(request) {
             features: newData.features || []
           }
         };
+        await category.save();
         break;
       }
 
       case 'delete-product': {
         const { productId } = newData;
-        const category = currentData.categories.find(c => c.slug === categorySlug);
+        const category = await Category.findOne({ slug: categorySlug });
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
         if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
 
-        // Find and delete the product images
         let productToDelete = null;
         
         if (subsubcategorySlug) {
           const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
           if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
 
-          // Find the product before deleting
           productToDelete = subsubcategory.products.find(p => p.id === productId);
           
           if (productToDelete) {
-            // Delete product images from file system
-            deleteProductImages(productToDelete);
+            await deleteProductImages(productToDelete);
           }
           
-          // Remove product from data
           subsubcategory.products = subsubcategory.products.filter(p => p.id !== productId);
         } else {
-          // Delete from subcategory
           if (subcategory.products) {
-            // Find the product before deleting
             productToDelete = subcategory.products.find(p => p.id === productId);
             
             if (productToDelete) {
-              // Delete product images from file system
-              deleteProductImages(productToDelete);
+              await deleteProductImages(productToDelete);
             }
             
-            // Remove product from data
             subcategory.products = subcategory.products.filter(p => p.id !== productId);
           }
         }
+        await category.save();
         break;
       }
 
       case 'delete-category': {
         const { slug } = newData;
-        const categoryIndex = currentData.categories.findIndex(c => c.slug === slug);
+        const result = await Category.deleteOne({ slug });
         
-        if (categoryIndex === -1) {
+        if (result.deletedCount === 0) {
           return NextResponse.json({ error: 'Category not found' }, { status: 404 });
         }
-
-        currentData.categories.splice(categoryIndex, 1);
         break;
       }
 
       case 'delete-subcategory': {
-        const category = currentData.categories.find(c => c.slug === categorySlug);
+        const category = await Category.findOne({ slug: categorySlug });
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const { slug } = newData;
@@ -320,11 +266,12 @@ export async function POST(request) {
         }
 
         category.subcategories.splice(subcategoryIndex, 1);
+        await category.save();
         break;
       }
 
       case 'delete-subsubcategory': {
-        const category = currentData.categories.find(c => c.slug === categorySlug);
+        const category = await Category.findOne({ slug: categorySlug });
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
@@ -338,12 +285,13 @@ export async function POST(request) {
         }
 
         subcategory.subsubcategories.splice(subSubIndex, 1);
+        await category.save();
         break;
       }
 
       case 'toggle-hero-subcategory': {
         const { showInHero } = body;
-        const category = currentData.categories.find(c => c.slug === categorySlug);
+        const category = await Category.findOne({ slug: categorySlug });
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
@@ -361,6 +309,7 @@ export async function POST(request) {
 
         // Toggle the showInHero property
         subcategory.showInHero = showInHero;
+        await category.save();
         break;
       }
 
@@ -371,20 +320,14 @@ export async function POST(request) {
         );
     }
 
-    const success = writeData(currentData);
-    
-    if (success) {
-      return NextResponse.json({
-        success: true,
-        message: 'Data updated successfully',
-        data: currentData
-      });
-    } else {
-      return NextResponse.json(
-        { error: 'Failed to write data' },
-        { status: 500 }
-      );
-    }
+    // Return updated data
+    const categories = await Category.find({}).lean();
+    return NextResponse.json({
+      success: true,
+      message: 'Data updated successfully',
+      data: { categories }
+    });
+
   } catch (error) {
     console.error('Error processing request:', error);
     return NextResponse.json(
