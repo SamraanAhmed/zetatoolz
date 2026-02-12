@@ -55,17 +55,35 @@ export default function AdminPage() {
     }
   }, []);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (password === 'admin123') {
-      sessionStorage.setItem('adminAuth', 'authenticated');
-      setIsAuthenticated(true);
-      loadData();
-      showNotification('Login successful!', 'success');
-    } else {
-      showNotification('Incorrect password', 'error');
+    setLoading(true);
+    
+    try {
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        sessionStorage.setItem('adminAuth', 'authenticated');
+        setIsAuthenticated(true);
+        loadData();
+        showNotification('Login successful!', 'success');
+      } else {
+        showNotification('Incorrect password', 'error');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      showNotification('Login failed. Please try again.', 'error');
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const handleLogout = () => {
     sessionStorage.removeItem('adminAuth');

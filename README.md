@@ -152,7 +152,36 @@ zetatoolz/
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
+### ⚠️ Important: Admin Panel Requires VPS
+
+**File uploads only work on VPS/traditional hosting!** Product uploads from the admin panel need a server with a writable filesystem.
+
+### VPS Deployment (Recommended for Admin Panel) ✅
+
+For **full admin functionality** with product uploads from any computer:
+
+📚 **See:** [DEPLOY_TO_VPS.md](./DEPLOY_TO_VPS.md) - Quick 5-minute guide  
+📖 **Full Guide:** [VPS_DEPLOYMENT_GUIDE.md](./VPS_DEPLOYMENT_GUIDE.md) - Complete instructions
+
+**Quick Summary:**
+```bash
+# On your VPS
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs git
+cd /var/www && sudo git clone YOUR-REPO
+cd zetatoolz && sudo npm install && sudo npm run build
+sudo npm install -g pm2
+pm2 start npm --name "zetatoolz" -- start
+sudo chmod -R 777 app/data public/images
+```
+
+**Admin Panel:** `http://your-server-ip:3000/admin` ✅
+
+---
+
+### Vercel/Netlify (Frontend Only) ⚠️
+
+**Note:** Admin uploads won't work on serverless platforms!
 
 ```bash
 # 1. Push to GitHub
@@ -163,23 +192,12 @@ git push
 # 2. Deploy on Vercel
 # - Connect your GitHub repo
 # - Deploy!
-
-# That's it! No database configuration needed.
 ```
 
-### Netlify
+**For admin functionality on Vercel, you'll need to migrate to:**
+- **Vercel Blob** for images
+- **MongoDB Atlas** or **Vercel Postgres** for data
 
-Same as Vercel - just connect your repo and deploy!
-
-### Traditional Hosting
-
-```bash
-# Build the project
-npm run build
-
-# Start production server
-npm start
-```
 
 ## 🔒 Security
 
