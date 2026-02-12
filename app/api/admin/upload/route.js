@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { uploadImage } from '../../../lib/cloudinary.js';
+import { uploadImage } from '@/lib/cloudinary.js';
 
 /**
  * Enhanced Image Upload API - Cloudinary Edition
