@@ -1,6 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# ============================================
+# DEPENDENCIES (Installed via npm install)
+# ============================================
 /node_modules
 /.pnp
 .pnp.*
@@ -10,45 +12,114 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# ============================================
+# NEXT.JS BUILD OUTPUT
+# ============================================
 /.next/
 /out/
-
-# production
 /build
 
-# misc
-.DS_Store
-*.pem
+# ============================================
+# TESTING
+# ============================================
+/coverage
 
-# debug
+# ============================================
+# ENVIRONMENT VARIABLES
+# ============================================
+# NOTE: Update these if you need to commit specific env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ============================================
+# OPERATING SYSTEM FILES
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ============================================
+# EDITOR & IDE
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# ============================================
+# LOGS
+# ============================================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# ============================================
+# CERTIFICATES & KEYS
+# ============================================
+*.pem
+*.key
+*.cert
 
-# vercel
+# ============================================
+# DEPLOYMENT PLATFORMS
+# ============================================
 .vercel
 
-# typescript
+# ============================================
+# TYPESCRIPT
+# ============================================
 *.tsbuildinfo
 next-env.d.ts
 
-# Admin Panel - Don't deploy to production (comment out these lines if you want admin in production)
-# /app/admin/
-# /app/api/admin/
-# ADMIN_*.md
-
-# Database backups - don't commit these
-/app/data/backups/
-
-# Large image backups
+# ============================================
+# BACKUPS & ARCHIVES
+# ============================================
 /backups/
 *.tar.gz
+*.zip
+*.bak
+*.backup
 
+# ============================================
+# TEMPORARY FILES
+# ============================================
+*.tmp
+*.temp
+.cache/
+
+# ============================================
+# PACKAGE MANAGER LOCK FILES (OPTIONAL)
+# ============================================
+# Uncomment if you want to exclude lock files
+# (Client will need to run npm install to generate them)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ============================================
+# KEEP THESE FILES (DO NOT IGNORE)
+# ============================================
+# All application source code in /app
+# All components
+# All API routes
+# All data files
+# package.json (required for npm install)
+# next.config.js
+# tailwind.config.js (if exists)
+# All configuration files
+# Public assets and images
+# README and documentation

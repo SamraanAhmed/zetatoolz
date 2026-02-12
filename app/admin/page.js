@@ -868,7 +868,20 @@ export default function AdminPage() {
 
             {/* List existing subcategories */}
             <div className="mt-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Existing Subcategories</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Existing Subcategories</h3>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <div className="flex-1">
+                    <h4 className="text-sm font-semibold text-blue-900 mb-1">Hero Section Feature</h4>
+                    <p className="text-sm text-blue-800">
+                      Click the <strong>Feature</strong> button to select which subcategories appear in the hero section on the homepage. You can feature up to <strong>3 subcategories per category</strong>. Featured subcategories are marked with a <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">★ Hero</span> badge.
+                    </p>
+                  </div>
+                </div>
+              </div>
               <div className="space-y-4">
                 {data.categories?.map((cat) => (
                   <div key={cat.slug}>
@@ -877,10 +890,56 @@ export default function AdminPage() {
                       {cat.subcategories?.map((sub) => (
                         <div key={sub.slug} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                           <div className="flex-1">
-                            <p className="font-medium text-gray-900">{sub.name}</p>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium text-gray-900">{sub.name}</p>
+                              {sub.showInHero && (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
+                                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                  Hero
+                                </span>
+                              )}
+                            </div>
                             <p className="text-sm text-gray-500">{sub.slug}</p>
                           </div>
                           <div className="flex items-center gap-3">
+                            <button
+                              onClick={async () => {
+                                try {
+                                  const response = await fetch('/api/admin/data', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                      action: 'toggle-hero-subcategory',
+                                      categorySlug: cat.slug,
+                                      subcategorySlug: sub.slug,
+                                      showInHero: !sub.showInHero
+                                    }),
+                                  });
+                                  const result = await response.json();
+                                  if (result.success) {
+                                    showNotification(sub.showInHero ? 'Removed from hero section' : 'Added to hero section', 'success');
+                                    loadData();
+                                  } else {
+                                    showNotification(result.error || 'Failed to update', 'error');
+                                  }
+                                } catch (error) {
+                                  showNotification('Error updating hero status', 'error');
+                                }
+                              }}
+                              className={`px-3 py-1.5 text-sm rounded-lg transition-colors flex items-center gap-1 ${
+                                sub.showInHero 
+                                  ? 'bg-yellow-500 text-white hover:bg-yellow-600' 
+                                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              }`}
+                              title={sub.showInHero ? "Remove from hero" : "Show in hero"}
+                            >
+                              <svg className="w-4 h-4" fill={sub.showInHero ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                              </svg>
+                              {sub.showInHero ? 'Featured' : 'Feature'}
+                            </button>
                             <span className="text-sm text-gray-600">
                               {(sub.products?.length || 0) + (sub.subsubcategories?.reduce((acc, subsub) => acc + (subsub.products?.length || 0), 0) || 0)} products
                             </span>
@@ -1114,14 +1173,13 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description (optional)</label>
                 <textarea
                   value={newProduct.description}
                   onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   rows="3"
                   placeholder="Brief product description"
-                  required
                 />
               </div>
 

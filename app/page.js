@@ -5,12 +5,76 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ProductCard from './components/ProductCard';
 import { products } from './data/products';
-import { categoriesData } from './data/categories';
 
 export default function Home() {
   const featuredProducts = products.slice(0, 3);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [slides, setSlides] = useState([]);
+
+  // Fetch categories data from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/admin/data');
+        const data = await response.json();
+        setCategoriesData(data.categories || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setCategoriesData([]);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Build slides when categories data changes
+  useEffect(() => {
+    if (!categoriesData || categoriesData.length === 0) {
+      setSlides([]);
+      return;
+    }
+
+    const newSlides = categoriesData.map(category => {
+      // Get subcategories marked for hero display (showInHero: true), fallback to first 3 if none are marked
+      const heroSubcategories = (category.subcategories || [])
+        .map(sub => ({
+          slug: sub.slug,
+          categorySlug: category.slug,
+          ...sub
+        }))
+        .filter(sub => sub.showInHero);
+      
+      // If no subcategories are marked for hero, fall back to first 3
+      const topSubcategories = heroSubcategories.length > 0 
+        ? heroSubcategories.slice(0, 3)
+        : (category.subcategories || []).slice(0, 3).map(sub => ({
+            slug: sub.slug,
+            categorySlug: category.slug,
+            ...sub
+          }));
+
+      // Assign colors based on category
+      const colorMap = {
+        'beauty-instruments': '#8fcfe9ff',
+        'medical-instruments': '#8fcfe9ff',
+        'industrial-tools': '#8fcfe9ff',
+        'jewelry-tools': '#8fcfe9ff'
+      };
+
+      return {
+        categorySlug: category.slug,
+        categoryName: category.name,
+        description: category.description,
+        bgColor: colorMap[category.slug] || '#8fcfe9ff',
+        viewAllLink: `/categories/${category.slug}`,
+        subcategories: topSubcategories
+      };
+    });
+
+    setSlides(newSlides);
+  }, [categoriesData]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,36 +85,6 @@ export default function Home() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  // Build slides dynamically from categories data - MEGA CATEGORY SWITCHER
-  const slides = Object.keys(categoriesData).map(categorySlug => {
-    const category = categoriesData[categorySlug];
-    
-    // Get top 3 subcategories for this main category
-    const subcategoryKeys = Object.keys(category.subcategories).slice(0, 3);
-    const topSubcategories = subcategoryKeys.map(subSlug => ({
-      slug: subSlug,
-      categorySlug: categorySlug,
-      ...category.subcategories[subSlug]
-    }));
-
-    // Assign colors based on category
-    const colorMap = {
-      'beauty-instruments': '#8fcfe9ff',
-      'medical-instruments': '#8fcfe9ff',
-      'industrial-tools': '#8fcfe9ff',
-      'jewelry-tools': '#8fcfe9ff'
-    };
-
-    return {
-      categorySlug,
-      categoryName: category.name,
-      description: category.description,
-      bgColor: colorMap[categorySlug] || '#8fcfe9ff',
-      viewAllLink: `/categories/${categorySlug}`,
-      subcategories: topSubcategories
-    };
-  });
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);

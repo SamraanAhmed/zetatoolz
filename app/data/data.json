@@ -26,7 +26,8 @@
                                 "features": []
                             }
                         }
-                    ]
+                    ],
+                    "showInHero": false
                 },
                 {
                     "slug": "thinning-scissors",
@@ -44,13 +45,15 @@
                     "slug": "multi-purpose-scissors",
                     "name": "Multi Purpose Scissors",
                     "description": "",
-                    "subsubcategories": []
+                    "subsubcategories": [],
+                    "showInHero": true
                 },
                 {
                     "slug": "nail-cuticle-scissors",
                     "name": "Nail & Cuticle Scissors",
                     "description": "",
-                    "subsubcategories": []
+                    "subsubcategories": [],
+                    "showInHero": false
                 },
                 {
                     "slug": "fancy-scissors",
@@ -106,7 +109,8 @@
                             "description": "",
                             "products": []
                         }
-                    ]
+                    ],
+                    "showInHero": true
                 },
                 {
                     "slug": "cuticle-nipper",
@@ -118,7 +122,8 @@
                     "slug": "nail-file",
                     "name": "Nail File",
                     "description": "",
-                    "subsubcategories": []
+                    "subsubcategories": [],
+                    "showInHero": false
                 },
                 {
                     "slug": "foot-file",
@@ -130,7 +135,8 @@
                     "slug": "con-cutter",
                     "name": "Con Cutter",
                     "description": "",
-                    "subsubcategories": []
+                    "subsubcategories": [],
+                    "showInHero": true
                 },
                 {
                     "slug": "shaving-razors",
@@ -148,7 +154,8 @@
                     "slug": "mani-pedi-kits",
                     "name": "Mani & Pedi Kits",
                     "description": "",
-                    "subsubcategories": []
+                    "subsubcategories": [],
+                    "showInHero": false
                 }
             ]
         },

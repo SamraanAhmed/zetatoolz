@@ -341,6 +341,29 @@ export async function POST(request) {
         break;
       }
 
+      case 'toggle-hero-subcategory': {
+        const { showInHero } = body;
+        const category = currentData.categories.find(c => c.slug === categorySlug);
+        if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+
+        const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
+        if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
+
+        // If enabling, check if limit of 3 is reached for this category
+        if (showInHero) {
+          const currentFeaturedCount = category.subcategories.filter(s => s.showInHero).length;
+          if (currentFeaturedCount >= 3) {
+            return NextResponse.json({ 
+              error: 'Maximum 3 subcategories can be featured in hero section per category' 
+            }, { status: 400 });
+          }
+        }
+
+        // Toggle the showInHero property
+        subcategory.showInHero = showInHero;
+        break;
+      }
+
       default:
         return NextResponse.json(
           { error: 'Invalid action' },

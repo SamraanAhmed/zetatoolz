@@ -39,14 +39,21 @@ export default function ProductDetailClient({ id }) {
     });
     
     const variantInfo = selectedVariant ? ` - ${selectedVariant.name}` : '';
-    const subject = `Inquiry: Purchase Request for ${product.name}${variantInfo}`;
+    const subject = `Order Status & Tracking Request`;
     const body = `Hello,
 
-I am interested in purchasing the ${product.name}${variantInfo}.
+I would like to request an update on my recent order. Please find the order details below:
 
-Please provide the current market price for today, ${today}.
+Order Date: {{ORDER_DATE}}
+Product(s) Ordered: ${product.name}${variantInfo}
+Article Number: ${product.id}
 
-Thank you.`;
+Kindly share the current status of the order and the tracking information, if available.
+
+Thank you.
+
+Best regards,
+Customer`;
 
     // Check if user is on mobile device
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
