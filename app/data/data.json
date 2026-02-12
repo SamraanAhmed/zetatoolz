@@ -27,13 +27,14 @@
                             }
                         }
                     ],
-                    "showInHero": false
+                    "showInHero": true
                 },
                 {
                     "slug": "thinning-scissors",
                     "name": "Thinning Scissors",
                     "description": "",
-                    "subsubcategories": []
+                    "subsubcategories": [],
+                    "showInHero": false
                 },
                 {
                     "slug": "pet-grooming-scissors",
@@ -46,7 +47,7 @@
                     "name": "Multi Purpose Scissors",
                     "description": "",
                     "subsubcategories": [],
-                    "showInHero": true
+                    "showInHero": false
                 },
                 {
                     "slug": "nail-cuticle-scissors",
@@ -84,7 +85,8 @@
                             "description": "",
                             "products": []
                         }
-                    ]
+                    ],
+                    "showInHero": true
                 },
                 {
                     "slug": "tweezer",
@@ -110,7 +112,7 @@
                             "products": []
                         }
                     ],
-                    "showInHero": true
+                    "showInHero": false
                 },
                 {
                     "slug": "cuticle-nipper",

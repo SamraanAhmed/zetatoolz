@@ -29,6 +29,37 @@ export default function Home() {
     fetchCategories();
   }, []);
 
+  // Helper function to get the first product image from a subcategory
+  const getFirstProductImage = (subcategory) => {
+    // Check if subcategory has direct products
+    if (subcategory.products && subcategory.products.length > 0) {
+      const firstProduct = subcategory.products[0];
+      // Get first image from product
+      if (firstProduct.images && firstProduct.images.length > 0) {
+        return firstProduct.images[0];
+      } else if (firstProduct.image) {
+        return firstProduct.image;
+      }
+    }
+    
+    // Check sub-subcategories for products
+    if (subcategory.subsubcategories && subcategory.subsubcategories.length > 0) {
+      for (const subsub of subcategory.subsubcategories) {
+        if (subsub.products && subsub.products.length > 0) {
+          const firstProduct = subsub.products[0];
+          if (firstProduct.images && firstProduct.images.length > 0) {
+            return firstProduct.images[0];
+          } else if (firstProduct.image) {
+            return firstProduct.image;
+          }
+        }
+      }
+    }
+    
+    // Fallback to placeholder
+    return 'https://placehold.co/600x400/8fcfe9/ffffff/png?text=No+Products';
+  };
+
   // Build slides when categories data changes
   useEffect(() => {
     if (!categoriesData || categoriesData.length === 0) {
@@ -42,7 +73,8 @@ export default function Home() {
         .map(sub => ({
           slug: sub.slug,
           categorySlug: category.slug,
-          ...sub
+          ...sub,
+          heroImage: getFirstProductImage(sub)
         }))
         .filter(sub => sub.showInHero);
       
@@ -52,7 +84,8 @@ export default function Home() {
         : (category.subcategories || []).slice(0, 3).map(sub => ({
             slug: sub.slug,
             categorySlug: category.slug,
-            ...sub
+            ...sub,
+            heroImage: getFirstProductImage(sub)
           }));
 
       // Assign colors based on category
@@ -200,71 +233,134 @@ export default function Home() {
     <div className="space-y-12 md:space-y-20">
       {/* Hero Carousel Section */}
       <section className="relative h-[500px] sm:h-[550px] lg:h-[600px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl">
-        {/* Background with gradient */}
-        <div 
-          className="absolute inset-0 transition-colors duration-700"
-          style={{
-            background: '#4fb9e3',
-            backgroundImage: 'linear-gradient(90deg, rgba(79, 185, 227, 1) 0%, rgba(255, 255, 255, 1) 64%)'
-          }}
-        />
+        {/* Background with gradient - Top to Bottom on Mobile, Left to Right on Desktop */}
+        <div className="absolute inset-0 transition-colors duration-700">
+          {/* Mobile/Tablet: Top to Bottom Gradient */}
+          <div 
+            className="absolute inset-0 lg:hidden"
+            style={{
+              background: '#4fb9e3',
+              backgroundImage: 'linear-gradient(180deg, rgba(79, 185, 227, 1) 0%, rgba(255, 255, 255, 1) 75%)'
+            }}
+          />
+          {/* Desktop: Left to Right Gradient */}
+          <div 
+            className="absolute inset-0 hidden lg:block"
+            style={{
+              background: '#4fb9e3',
+              backgroundImage: 'linear-gradient(90deg, rgba(79, 185, 227, 1) 0%, rgba(255, 255, 255, 1) 64%)'
+            }}
+          />
+        </div>
 
         {/* Content Container */}
-        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-          {/* Left Side - Typography */}
-          <div className="w-full lg:w-[45%] z-10 animate-fade-in">
-            <div className="mb-2 text-white/90 text-xs sm:text-sm font-medium tracking-widest uppercase">
-              {slides[currentSlide].description}
+        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Desktop Layout - Side by Side */}
+          <div className="hidden lg:flex h-full items-center">
+            {/* Left Side - Typography */}
+            <div className="w-[45%] z-10 animate-fade-in">
+              <div className="mb-2 text-white/90 text-xs sm:text-sm font-medium tracking-widest uppercase">
+                {slides[currentSlide].description}
+              </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-white mb-4 sm:mb-6 leading-tight drop-shadow-xl">
+                {slides[currentSlide].categoryName}
+              </h1>
+              <Link 
+                href={slides[currentSlide].viewAllLink}
+                className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium tracking-wide mt-2 sm:mt-4 border-b border-white/30 hover:border-white pb-1 transition-all text-sm sm:text-base"
+              >
+                View All Sub-categories
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+              
+              {/* Navigation Dots */}
+              <div className="flex gap-2 sm:gap-3 mt-8 sm:mt-12">
+                {slides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`transition-all duration-300 rounded-full ${
+                      index === currentSlide 
+                        ? 'w-8 sm:w-12 h-2 sm:h-3 bg-white' 
+                        : 'w-2 sm:w-3 h-2 sm:h-3 bg-white/50 hover:bg-white/75'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-white mb-4 sm:mb-6 leading-tight drop-shadow-xl">
-              {slides[currentSlide].categoryName}
-            </h1>
-            <Link 
-              href={slides[currentSlide].viewAllLink}
-              className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium tracking-wide mt-2 sm:mt-4 border-b border-white/30 hover:border-white pb-1 transition-all text-sm sm:text-base"
-            >
-              View All Sub-categories
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            
-            {/* Navigation Dots */}
-            <div className="flex gap-2 sm:gap-3 mt-8 sm:mt-12">
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`transition-all duration-300 rounded-full ${
-                    index === currentSlide 
-                      ? 'w-8 sm:w-12 h-2 sm:h-3 bg-white' 
-                      : 'w-2 sm:w-3 h-2 sm:h-3 bg-white/50 hover:bg-white/75'
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
+
+            {/* Right Side - Horizontal Subcategory Cards Stacked (Desktop Only) */}
+            <div className="w-[55%] h-full flex items-center justify-end relative pr-4">
+              <div className="relative w-full h-[520px] flex flex-col justify-center gap-4">
+                {slides[currentSlide].subcategories.slice(0, 3).map((sub, idx) => (
+                  <div
+                    key={sub.slug}
+                    className={`relative transition-all duration-700 animate-fade-in hover:scale-105 ${
+                      idx === 1 ? 'hover:scale-[1.03] z-20' : ''
+                    }`}
+                    style={{ 
+                      width: idx === 1 ? '480px' : '380px', 
+                      height: idx === 1 ? '200px' : '140px', 
+                      marginLeft: 'auto' 
+                    }}
+                  >
+                    <Link href={`/categories/${sub.categorySlug}/${sub.slug}`} className="block w-full h-full">
+                      <div className={`relative w-full h-full bg-white rounded-xl shadow-xl overflow-hidden border-2 border-white group ${idx === 1 ? 'rounded-2xl shadow-2xl border-4' : ''}`}>
+                        <Image
+                          src={sub.heroImage || 'https://placehold.co/600x400/8fcfe9/ffffff/png?text=No+Products'}
+                          alt={sub.name}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                        <div className={`absolute inset-0 ${idx === 1 ? 'bg-gradient-to-r from-black/30 via-black/20 to-transparent' : 'bg-gradient-to-r from-black/20 to-transparent'}`}>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Right Side - Horizontal Subcategory Cards Stacked (Hidden on Mobile) */}
-          <div className="hidden lg:flex lg:w-[55%] h-full items-center justify-end relative pr-4">
-            <div className="relative w-full h-[520px] flex flex-col justify-center gap-4">
-              {slides[currentSlide].subcategories.slice(0, 3).map((sub, idx) => (
-                <div
-                  key={sub.slug}
-                  className={`relative transition-all duration-700 animate-fade-in hover:scale-105 ${
-                    idx === 1 ? 'hover:scale-[1.03] z-20' : ''
-                  }`}
-                  style={{ 
-                    width: idx === 1 ? '480px' : '380px', 
-                    height: idx === 1 ? '200px' : '140px', 
-                    marginLeft: 'auto' 
-                  }}
-                >
-                  <Link href={`/categories/${sub.categorySlug}/${sub.slug}`} className="block w-full h-full">
-                    <div className={`relative w-full h-full bg-white rounded-xl shadow-xl overflow-hidden border-2 border-white group ${idx === 1 ? 'rounded-2xl shadow-2xl border-4' : ''}`}>
+          {/* Mobile & Tablet Layout - Vertical Stack */}
+          <div className="lg:hidden h-full flex flex-col justify-between py-8">
+            {/* Top - Category Name */}
+            <div className="z-10 animate-fade-in text-center">
+              <div className="mb-2 text-white/90 text-xs sm:text-sm font-medium tracking-widest uppercase">
+                {slides[currentSlide].description}
+              </div>
+              <h1 className="text-3xl sm:text-4xl font-normal text-white mb-4 leading-tight drop-shadow-xl">
+                {slides[currentSlide].categoryName}
+              </h1>
+              <Link 
+                href={slides[currentSlide].viewAllLink}
+                className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium tracking-wide border-b border-white/30 hover:border-white pb-1 transition-all text-sm"
+              >
+                View All Sub-categories
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            </div>
+
+            {/* Bottom - Subcategory Cards (Square Grid) */}
+            <div className="mt-6">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                {slides[currentSlide].subcategories.slice(0, 3).map((sub, idx) => (
+                  <Link 
+                    key={sub.slug}
+                    href={`/categories/${sub.categorySlug}/${sub.slug}`}
+                    className="block"
+                  >
+                    <div className="relative w-full aspect-square bg-white rounded-lg shadow-xl overflow-hidden border-2 border-white group hover:scale-105 transition-transform duration-300">
                       <Image
-                        src={sub.image || 'https://placehold.co/600x400/png?text=Image+Not+Found'}
+                        src={sub.heroImage || 'https://placehold.co/600x400/8fcfe9/ffffff/png?text=No+Products'}
                         alt={sub.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -272,13 +368,28 @@ export default function Home() {
                           e.target.style.display = 'none';
                         }}
                       />
-                      <div className={`absolute inset-0 flex items-center ${idx === 1 ? 'bg-gradient-to-r from-black/70 via-black/40 to-transparent p-6' : 'bg-gradient-to-r from-black/60 to-transparent p-5'}`}>
-
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/10 to-transparent">
                       </div>
                     </div>
                   </Link>
-                </div>
-              ))}
+                ))}
+              </div>
+              
+              {/* Navigation Dots for Mobile */}
+              <div className="flex gap-2 justify-center mt-6">
+                {slides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`transition-all duration-300 rounded-full ${
+                      index === currentSlide 
+                        ? 'w-8 h-2 bg-white' 
+                        : 'w-2 h-2 bg-white/50 hover:bg-white/75'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>

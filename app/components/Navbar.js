@@ -139,8 +139,7 @@ export default function Navbar() {
             {/* Right Side Utilities */}
             <div className="hidden md:flex items-center gap-4">
               {/* Currency Selector */}
-              <Link href="/shipping" className="text-gray-600 hover:text-blue-600 transition">Shipping Info</Link>
-              <span className="text-gray-600 border-l pl-4 ml-2">ISO 9001 & CE Certified</span>
+              <span className="text-gray-600 pl-4 ml-2">ISO 9001 & CE Certified</span>
             </div>
           </div>
         </div>
