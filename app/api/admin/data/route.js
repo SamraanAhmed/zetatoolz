@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import connectDB from '../../../../lib/mongodb';
-import Category from '../../../../lib/models/Category';
-import { deleteImage } from '../../../../lib/cloudinary';
+import connectDB from '../../../../lib/mongodb.js';
+import Category from '../../../../lib/models/Category.js';
+import { deleteImage } from '../../../../lib/cloudinary.js';
 
 // GET - Retrieve all data
 export async function GET() {
