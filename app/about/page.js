@@ -83,7 +83,7 @@ export default function AboutPage() {
         <div className="bg-white rounded-xl p-8 border border-gray-200 shadow-sm">
           <div className="prose max-w-none">
             <p className="text-gray-700 mb-4 leading-relaxed">
-              Based in the heart of <strong>Sialkot, Pakistan</strong> — a city known worldwide for its manufacturing excellence — we are a <strong>family-owned business</strong> with decades of experience in crafting high-quality beauty instruments, eyelash tweezers, embroidery hoops & tools, and lockpicking tools and sets.
+              Based in the heart of <strong>Sialkot, Pakistan</strong> — a city known worldwide for its manufacturing excellence — we are a <strong>family-owned business</strong> with decades of experience in crafting high-quality Beauty Instruments, Dental Instruments, Embroidery hoops & tools, and Lockpicking tools and sets.
             </p>
             <p className="text-gray-700 mb-4 leading-relaxed">
               What started as a small workshop has grown into a trusted name for international buyers seeking consistent quality and dependable manufacturing.
@@ -137,9 +137,7 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold">Our Mission</h2>
           </div>
           <p className="text-cyan-50 leading-relaxed">
-            To manufacture and deliver precision instruments that empower professionals worldwide to perform at their 
-            best. We are committed to innovation, quality, and sustainable manufacturing practices that benefit our 
-            customers and communities.
+            To provide high-quality instruments and tools that combine precision, reliability, and innovation, ensuring our customers receive the best products with exceptional service.
           </p>
         </div>
 
@@ -152,9 +150,7 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold text-gray-900">Our Vision</h2>
           </div>
           <p className="text-gray-700 leading-relaxed">
-            To be the world's most trusted name in precision instruments, recognized for our unwavering commitment 
-            to quality, innovation, and customer satisfaction. We aim to expand our reach while maintaining the 
-            personal touch and craftsmanship that define our brand.
+            To be a trusted global leader in premium instruments and tools, known for quality, innovation, and customer satisfaction.
           </p>
         </div>
       </div>

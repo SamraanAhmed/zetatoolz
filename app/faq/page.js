@@ -16,19 +16,16 @@ export default function FAQPage() {
       questions: [
         {
           q: "How do I request a cart?",
-          a: "You can request a cart in two ways: 1) Click the 'Email Inquiry' button on any product page to request pricing for individual items, or 2) Add multiple items to your Cart and click 'Request Cart for All Items' to get bulk pricing. Our sales team will respond within 24 hours with current market rates."
+          a: "You can request a cart in two ways: 1) Click the 'Email Inquiry' button on any product page to request pricing for any product, or 2) Add multiple items to your Cart and click 'Request Cart for All Items' to get  pricing. Our sales team will respond within 24 hours with the quote."
         },
-        {
-          q: "How do I request a cart?",
-          a: "You can request a cart in two ways: 1) Click the 'Email Inquiry' button on any product page to request pricing for individual items, or 2) Add multiple items to your Cart and click 'Request Cart for All Items' to get bulk pricing. Our sales team will respond within 24 hours with current market rates."
-        },
+       
         {
           q: "What is the minimum order quantity (MOQ)?",
-          a: "Our MOQ varies by product type. Generally, for individual items, there's no strict minimum. However, bulk orders of 100+ units qualify for volume discounts. Contact our sales team at info@zetatoolz.com for specific MOQ information on your products of interest."
+          a: "Our MOQ varies by product type. Please contact us with product details to confirm the exact MOQ"
         },
         {
           q: "Do you offer bulk discounts?",
-          a: "Yes! We offer attractive volume discounts for bulk orders. The discount tier depends on order quantity, product type, and delivery schedule. Contact us with your requirements for a customized bulk pricing cart."
+          a: "Yes! We offer competitive pricing for bulk orders. The price depends on the quantity and product type. Please share your required quantity for a customized quotation."
         }
       ]
     },
@@ -37,11 +34,11 @@ export default function FAQPage() {
       questions: [
         {
           q: "Are all products ISO certified?",
-          a: "Yes, all our manufacturing processes are ISO 9001:2015 certified. Additionally, our medical and surgical instruments are CE certified and FDA registered, ensuring they meet international quality and safety standards."
+          a: "We manufacture under strict quality standards.ISO certification is available for applicable products upon request."
         },
         {
           q: "What materials are your instruments made from?",
-          a: "We use premium surgical-grade stainless steel (mainly AISI 420 and 440 series) for our precision instruments. All materials are sourced from certified suppliers and undergo rigorous testing to ensure durability, corrosion resistance, and longevity."
+          a: "Our instruments are manufactured using high-quality stainless steel grades commonly used in Pakistan, including J1, J2, and 440C. Material selection depends on the product category and required quality level, ensuring durability, corrosion resistance, and precision performance.. All materials are sourced from certified suppliers to ensure durability, corrosion resistance, and longevity."
         },
         {
           q: "Can I customize products with my brand logo?",
@@ -49,7 +46,7 @@ export default function FAQPage() {
         },
         {
           q: "Do you provide product samples?",
-          a: "Yes, we can provide samples for evaluation purposes. Sample costs and shipping charges apply, but these can be credited against your first bulk order. Contact us to request samples."
+          a: "Yes, we can provide samples for evaluation purposes. Sample costs and shipping charges apply. Contact us to request samples."
         }
       ]
     },
@@ -66,11 +63,11 @@ export default function FAQPage() {
         },
         {
           q: "How can I track my order?",
-          a: "Once your order ships, you'll receive a tracking number via email. You can track your shipment using the 'Track Orders' link in our navigation menu or by contacting our customer service team."
+          a: "Once your order is shipped, we will send you the tracking number. You can use it to track your shipment directly with the courier."
         },
         {
           q: "What are the shipping costs?",
-          a: "Shipping costs depend on order weight, dimensions, destination, and shipping method selected. We provide accurate shipping carts during the quotation process. Bulk orders may qualify for free or discounted shipping."
+          a: "Shipping costs depend on order weight, dimensions, destination, and shipping method selected."
         }
       ]
     },
@@ -79,15 +76,12 @@ export default function FAQPage() {
       questions: [
         {
           q: "What warranty do you offer?",
-          a: "All our products come with a comprehensive warranty against manufacturing defects. The standard warranty period is 12 months from the date of delivery. This covers material and workmanship defects but excludes normal wear and tear or misuse."
+          a: "We provide warranty against manufacturing defects. Defective items will be replaced. Misuse and normal wear are not covered."
         },
-        {
-          q: "What is your return policy?",
-          a: "We accept returns within 30 days of delivery for unused products in original packaging. Manufacturing defects can be returned within the warranty period. Custom or personalized items are non-returnable unless defective. Please see our Returns page for complete details."
-        },
+       
         {
           q: "How do you ensure product quality?",
-          a: "Every instrument undergoes multiple quality control checkpoints during manufacturing. Our QC process includes material inspection, dimensional accuracy checks, functionality testing, and final visual inspection before packaging. Only products meeting our strict standards are shipped to customers."
+          a: "We follow strict quality checks at every stage to ensure durability, precision, and a flawless finish.."
         }
       ]
     },
@@ -96,16 +90,13 @@ export default function FAQPage() {
       questions: [
         {
           q: "What payment methods do you accept?",
-          a: "We accept bank wire transfers (T/T), Letter of Credit (L/C), PayPal, and major credit cards. For first-time orders, we typically require 30-50% advance payment with balance before shipping. Established customers may qualify for credit terms."
+          a: "We accept bank wire transfers."
         },
         {
           q: "Do you work with distributors?",
-          a: "Yes, we actively seek partnerships with distributors worldwide. We offer special pricing, dropshipping support, and marketing materials for our distribution partners. If you're interested in becoming a distributor, please contact us at info@zetatoolz.com."
+          a: "Yes, we actively seek partnerships with distributors worldwide. We offer special pricing for our distribution partners. If you're interested in becoming a distributor, please contact us at info@zetatoolz.com."
         },
-        {
-          q: "Can I visit your factory?",
-          a: "Absolutely! We welcome factory visits by appointment. This allows you to see our manufacturing processes, quality control systems, and meet our team. Please contact us at least 2 weeks in advance to schedule your visit."
-        }
+        
       ]
     }
   ];
