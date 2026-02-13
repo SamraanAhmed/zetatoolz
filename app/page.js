@@ -4,30 +4,62 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProductCard from './components/ProductCard';
-import { products } from './data/products';
+import { useData } from './hooks/useData';
 
 export default function Home() {
-  const featuredProducts = products.slice(0, 3);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [categoriesData, setCategoriesData] = useState([]);
+  const { categories: categoriesData } = useData();
   const [slides, setSlides] = useState([]);
 
-  // Fetch categories data from API
+  // Helper function to extract all products from categories
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('/api/admin/data');
-        const data = await response.json();
-        setCategoriesData(data.categories || []);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        setCategoriesData([]);
-      }
-    };
+    if (!categoriesData || categoriesData.length === 0) {
+      setFeaturedProducts([]);
+      return;
+    }
 
-    fetchCategories();
-  }, []);
+    const allProducts = [];
+    
+    categoriesData.forEach(category => {
+      if (category.subcategories) {
+        category.subcategories.forEach(subcategory => {
+          // Add products directly from subcategory
+          if (subcategory.products) {
+            subcategory.products.forEach(product => {
+              allProducts.push({
+                ...product,
+                category: category.name,
+                subcategory: subcategory.name,
+                subsubcategory: null
+              });
+            });
+          }
+          
+          // Add products from sub-subcategories
+          if (subcategory.subsubcategories) {
+            subcategory.subsubcategories.forEach(subsubcategory => {
+              if (subsubcategory.products) {
+                subsubcategory.products.forEach(product => {
+                  allProducts.push({
+                    ...product,
+                    category: category.name,
+                    subcategory: subcategory.name,
+                    subsubcategory: subsubcategory.name
+                  });
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+
+    // Get 3 random products for featured section or just first 3
+    // Using simple slice for now to match previous behavior
+    setFeaturedProducts(allProducts.slice(0, 3));
+  }, [categoriesData]);
 
   // Helper function to get the first product image from a subcategory
   const getFirstProductImage = (subcategory) => {

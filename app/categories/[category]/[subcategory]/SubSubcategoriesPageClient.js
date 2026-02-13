@@ -1,14 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { getCategoryInfo } from '../../../data/categories';
+import { useData } from '../../../hooks/useData';
 import Breadcrumb from '../../../components/Breadcrumb';
 import ProductCard from '../../../components/ProductCard';
 
 export default function SubSubcategoriesPageClient({ categorySlug, subcategorySlug }) {
-  const info = getCategoryInfo(categorySlug, subcategorySlug);
+  const { categories: categoriesData } = useData();
+  
+  const category = categoriesData?.[categorySlug];
+  const subcategory = category?.subcategories?.[subcategorySlug];
 
-  if (!info) {
+  if (!category || !subcategory) {
     return (
       <div className="text-center py-20">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Category Not Found</h1>
@@ -19,8 +22,12 @@ export default function SubSubcategoriesPageClient({ categorySlug, subcategorySl
     );
   }
 
-  const { category, subcategory } = info;
-  const subsubcategories = subcategory.subsubcategories || [];
+  // Transform sub-subcategories object to array
+  const subsubcategories = Object.keys(subcategory.subsubcategories || {}).map(slug => ({
+    slug,
+    ...subcategory.subsubcategories[slug]
+  }));
+  
   const products = subcategory.products || [];
 
   // If there are no sub-subcategories, display products directly

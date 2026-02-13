@@ -1,12 +1,12 @@
+'use client';
 import ProductCard from '../components/ProductCard';
-import { products } from '../data/products';
+import { useData } from '../hooks/useData';
 
-export const metadata = {
-  title: 'Shop All Products | Zeta Toolz',
-  description: 'Browse our complete collection of precision instruments.',
-};
+
 
 export default function ProductsPage() {
+  const { products } = useData();
+
   return (
     <div className="animate-fade-in">
       <div className="text-center max-w-2xl mx-auto mb-16">
