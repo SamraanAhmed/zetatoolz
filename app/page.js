@@ -15,18 +15,19 @@ export default function Home() {
 
   // Helper function to extract all products from categories
   useEffect(() => {
-    if (!categoriesData || categoriesData.length === 0) {
+    if (!categoriesData || Object.keys(categoriesData).length === 0) {
       setFeaturedProducts([]);
       return;
     }
 
     const allProducts = [];
     
-    categoriesData.forEach(category => {
+    Object.values(categoriesData).forEach(category => {
+      // Check for subcategories
       if (category.subcategories) {
-        category.subcategories.forEach(subcategory => {
+        Object.values(category.subcategories).forEach(subcategory => {
           // Add products directly from subcategory
-          if (subcategory.products) {
+          if (subcategory.products && Array.isArray(subcategory.products)) {
             subcategory.products.forEach(product => {
               allProducts.push({
                 ...product,
@@ -39,8 +40,8 @@ export default function Home() {
           
           // Add products from sub-subcategories
           if (subcategory.subsubcategories) {
-            subcategory.subsubcategories.forEach(subsubcategory => {
-              if (subsubcategory.products) {
+            Object.values(subcategory.subsubcategories).forEach(subsubcategory => {
+              if (subsubcategory.products && Array.isArray(subsubcategory.products)) {
                 subsubcategory.products.forEach(product => {
                   allProducts.push({
                     ...product,
@@ -75,8 +76,8 @@ export default function Home() {
     }
     
     // Check sub-subcategories for products
-    if (subcategory.subsubcategories && subcategory.subsubcategories.length > 0) {
-      for (const subsub of subcategory.subsubcategories) {
+    if (subcategory.subsubcategories && Object.keys(subcategory.subsubcategories).length > 0) {
+      for (const subsub of Object.values(subcategory.subsubcategories)) {
         if (subsub.products && subsub.products.length > 0) {
           const firstProduct = subsub.products[0];
           if (firstProduct.images && firstProduct.images.length > 0) {
@@ -94,14 +95,16 @@ export default function Home() {
 
   // Build slides when categories data changes
   useEffect(() => {
-    if (!categoriesData || categoriesData.length === 0) {
+    if (!categoriesData || Object.keys(categoriesData).length === 0) {
       setSlides([]);
       return;
     }
 
-    const newSlides = categoriesData.map(category => {
+    const newSlides = Object.values(categoriesData).map(category => {
       // Get subcategories marked for hero display (showInHero: true), fallback to first 3 if none are marked
-      const heroSubcategories = (category.subcategories || [])
+      const subcategories = category.subcategories ? Object.values(category.subcategories) : [];
+      
+      const heroSubcategories = subcategories
         .map(sub => ({
           slug: sub.slug,
           categorySlug: category.slug,
@@ -113,7 +116,7 @@ export default function Home() {
       // If no subcategories are marked for hero, fall back to first 3
       const topSubcategories = heroSubcategories.length > 0 
         ? heroSubcategories.slice(0, 3)
-        : (category.subcategories || []).slice(0, 3).map(sub => ({
+        : subcategories.slice(0, 3).map(sub => ({
             slug: sub.slug,
             categorySlug: category.slug,
             ...sub,
@@ -359,7 +362,10 @@ export default function Home() {
               </div>
             </div>
           </div>
+ 
 
+
+ 
           {/* Mobile & Tablet Layout - Vertical Stack */}
           <div className="lg:hidden h-full flex flex-col justify-between py-8">
             {/* Top - Category Name */}
