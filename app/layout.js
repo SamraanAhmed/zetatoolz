@@ -1,5 +1,6 @@
 import './globals.css';
 import { CartProvider } from './context/CartContext';
+import { DataProvider } from './hooks/useData';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -12,13 +13,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">
-        <CartProvider>
-          <Navbar />
-          <main className="flex-grow pt-52 md:pt-48 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-            {children}
-          </main>
-          <Footer />
-        </CartProvider>
+        <DataProvider>
+          <CartProvider>
+            <Navbar />
+            <main className="flex-grow pt-52 md:pt-48 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+              {children}
+            </main>
+            <Footer />
+          </CartProvider>
+        </DataProvider>
       </body>
     </html>
   );
