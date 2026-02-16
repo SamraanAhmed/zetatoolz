@@ -2,17 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useData } from '../hooks/useData';
+import { getMainCategories } from '../data/categories';
 import Breadcrumb from '../components/Breadcrumb';
 
 export default function CategoriesPage() {
-  const { categories: categoriesData } = useData();
-  
-  // Transform object to array format expected by the template
-  const categories = Object.keys(categoriesData || {}).map(slug => ({
-    slug,
-    ...categoriesData[slug]
-  }));
+  const categories = getMainCategories();
 
   return (
     <div className="animate-fade-in">

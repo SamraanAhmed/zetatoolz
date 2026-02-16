@@ -1,14 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useData } from '../../hooks/useData';
+import { getSubcategories } from '../../data/categories';
 import Breadcrumb from '../../components/Breadcrumb';
 
 export default function SubcategoriesPageClient({ categorySlug }) {
-  const { categories: categoriesData } = useData();
-  const categoryData = categoriesData?.[categorySlug];
+  const data = getSubcategories(categorySlug);
 
-  if (!categoryData) {
+  if (!data) {
     return (
       <div className="text-center py-20">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Category Not Found</h1>
@@ -19,23 +18,19 @@ export default function SubcategoriesPageClient({ categorySlug }) {
     );
   }
 
-  // Transform subcategories object to array
-  const subcategories = Object.keys(categoryData.subcategories || {}).map(slug => ({
-    slug,
-    ...categoryData.subcategories[slug]
-  }));
+  const { category, subcategories } = data;
 
   return (
     <div className="animate-fade-in">
       <Breadcrumb items={[
         { label: 'All Categories', href: '/categories' },
-        { label: categoryData.name, href: null }
+        { label: category.name, href: null }
       ]} />
 
       <div className="mb-10">
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">{categoryData.name}</h1>
+        <h1 className="text-4xl font-bold text-gray-900 mb-3">{category.name}</h1>
         <p className="text-gray-600 text-lg">
-          {categoryData.description}
+          {category.description}
         </p>
       </div>
 

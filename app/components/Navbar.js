@@ -5,13 +5,13 @@ import Image from 'next/image';
 import { useCart } from '../context/CartContext';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import { useData } from '../hooks/useData';
+import { categoriesData } from '../data/categories';
+import { products } from '../data/products';
 
 export default function Navbar() {
-  const { getCartCount } = useCart();
+  const { getCartCount, getCartTotal } = useCart();
   const pathname = usePathname();
   const router = useRouter();
-  const { categories: categoriesData, products } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCategory, setSearchCategory] = useState('All');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -64,7 +64,7 @@ export default function Navbar() {
       setDropdownResults([]);
       setShowDropdown(false);
     }
-  }, [searchQuery, searchCategory, products]);
+  }, [searchQuery, searchCategory]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -84,10 +84,10 @@ export default function Navbar() {
     router.push(`/products/${productId}`);
   };
 
-  const productCategories = Object.keys(categoriesData || {}).map(slug => ({
+  const productCategories = Object.keys(categoriesData).map(slug => ({
     name: categoriesData[slug].name,
     href: `/categories/${slug}`,
-    subcategories: Object.keys(categoriesData[slug].subcategories || {}).map(subSlug => ({
+    subcategories: Object.keys(categoriesData[slug].subcategories).map(subSlug => ({
       name: categoriesData[slug].subcategories[subSlug].name,
       href: `/categories/${slug}/${subSlug}`,
       subsubcategories: Object.keys(categoriesData[slug].subcategories[subSlug].subsubcategories || {}).map(subSubSlug => ({
@@ -98,7 +98,7 @@ export default function Navbar() {
   }));
 
   // Get all categories for search dropdown
-  const allCategories = Object.keys(categoriesData || {}).map(slug => categoriesData[slug].name);
+  const allCategories = Object.keys(categoriesData).map(slug => categoriesData[slug].name);
 
   return (
     <header className="fixed top-0 w-full z-50 bg-white shadow-md">

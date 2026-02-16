@@ -1,7 +1,5 @@
 # Zeta Tools - B2B E-Commerce Platform
 
-> Now deployed with MongoDB Atlas + Cloudinary for production use!
-
 A modern, file-based B2B e-commerce platform built with Next.js, featuring a complete admin dashboard and organized product catalog management.
 
 ## 🚀 Quick Start

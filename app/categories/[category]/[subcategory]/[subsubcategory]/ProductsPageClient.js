@@ -1,18 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useData } from '../../../../hooks/useData';
+import { getCategoryInfo } from '../../../../data/categories';
 import ProductCard from '../../../../components/ProductCard';
 import Breadcrumb from '../../../../components/Breadcrumb';
 
 export default function ProductsPageClient({ categorySlug, subcategorySlug, subsubcategorySlug }) {
-  const { categories: categoriesData } = useData();
-  
-  const category = categoriesData?.[categorySlug];
-  const subcategory = category?.subcategories?.[subcategorySlug];
-  const subsubcategory = subcategory?.subsubcategories?.[subsubcategorySlug];
+  const categoryInfo = getCategoryInfo(categorySlug, subcategorySlug, subsubcategorySlug);
 
-  if (!category || !subcategory || !subsubcategory) {
+  if (!categoryInfo) {
     return (
       <div className="text-center py-20">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Category Not Found</h1>
@@ -23,6 +19,7 @@ export default function ProductsPageClient({ categorySlug, subcategorySlug, subs
     );
   }
 
+  const { category, subcategory, subsubcategory } = categoryInfo;
   const products = subsubcategory.products || [];
 
   return (

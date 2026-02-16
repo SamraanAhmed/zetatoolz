@@ -4,63 +4,30 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProductCard from './components/ProductCard';
-import { useData } from './hooks/useData';
+import { products } from './data/products';
 
 export default function Home() {
-  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const featuredProducts = products.slice(0, 3);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const { categories: categoriesData } = useData();
+  const [categoriesData, setCategoriesData] = useState([]);
   const [slides, setSlides] = useState([]);
 
-  // Helper function to extract all products from categories
+  // Fetch categories data from API
   useEffect(() => {
-    if (!categoriesData || Object.keys(categoriesData).length === 0) {
-      setFeaturedProducts([]);
-      return;
-    }
-
-    const allProducts = [];
-    
-    Object.values(categoriesData).forEach(category => {
-      // Check for subcategories
-      if (category.subcategories) {
-        Object.values(category.subcategories).forEach(subcategory => {
-          // Add products directly from subcategory
-          if (subcategory.products && Array.isArray(subcategory.products)) {
-            subcategory.products.forEach(product => {
-              allProducts.push({
-                ...product,
-                category: category.name,
-                subcategory: subcategory.name,
-                subsubcategory: null
-              });
-            });
-          }
-          
-          // Add products from sub-subcategories
-          if (subcategory.subsubcategories) {
-            Object.values(subcategory.subsubcategories).forEach(subsubcategory => {
-              if (subsubcategory.products && Array.isArray(subsubcategory.products)) {
-                subsubcategory.products.forEach(product => {
-                  allProducts.push({
-                    ...product,
-                    category: category.name,
-                    subcategory: subcategory.name,
-                    subsubcategory: subsubcategory.name
-                  });
-                });
-              }
-            });
-          }
-        });
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/admin/data');
+        const data = await response.json();
+        setCategoriesData(data.categories || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setCategoriesData([]);
       }
-    });
+    };
 
-    // Get 3 random products for featured section or just first 3
-    // Using simple slice for now to match previous behavior
-    setFeaturedProducts(allProducts.slice(0, 3));
-  }, [categoriesData]);
+    fetchCategories();
+  }, []);
 
   // Helper function to get the first product image from a subcategory
   const getFirstProductImage = (subcategory) => {
@@ -76,8 +43,8 @@ export default function Home() {
     }
     
     // Check sub-subcategories for products
-    if (subcategory.subsubcategories && Object.keys(subcategory.subsubcategories).length > 0) {
-      for (const subsub of Object.values(subcategory.subsubcategories)) {
+    if (subcategory.subsubcategories && subcategory.subsubcategories.length > 0) {
+      for (const subsub of subcategory.subsubcategories) {
         if (subsub.products && subsub.products.length > 0) {
           const firstProduct = subsub.products[0];
           if (firstProduct.images && firstProduct.images.length > 0) {
@@ -95,16 +62,14 @@ export default function Home() {
 
   // Build slides when categories data changes
   useEffect(() => {
-    if (!categoriesData || Object.keys(categoriesData).length === 0) {
+    if (!categoriesData || categoriesData.length === 0) {
       setSlides([]);
       return;
     }
 
-    const newSlides = Object.values(categoriesData).map(category => {
+    const newSlides = categoriesData.map(category => {
       // Get subcategories marked for hero display (showInHero: true), fallback to first 3 if none are marked
-      const subcategories = category.subcategories ? Object.values(category.subcategories) : [];
-      
-      const heroSubcategories = subcategories
+      const heroSubcategories = (category.subcategories || [])
         .map(sub => ({
           slug: sub.slug,
           categorySlug: category.slug,
@@ -116,7 +81,7 @@ export default function Home() {
       // If no subcategories are marked for hero, fall back to first 3
       const topSubcategories = heroSubcategories.length > 0 
         ? heroSubcategories.slice(0, 3)
-        : subcategories.slice(0, 3).map(sub => ({
+        : (category.subcategories || []).slice(0, 3).map(sub => ({
             slug: sub.slug,
             categorySlug: category.slug,
             ...sub,
@@ -362,10 +327,7 @@ export default function Home() {
               </div>
             </div>
           </div>
- 
 
-
- 
           {/* Mobile & Tablet Layout - Vertical Stack */}
           <div className="lg:hidden h-full flex flex-col justify-between py-8">
             {/* Top - Category Name */}

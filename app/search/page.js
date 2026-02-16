@@ -4,13 +4,13 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ProductCard from '../components/ProductCard';
-import { useData } from '../hooks/useData';
+import { products } from '../data/products';
+import { categoriesData } from '../data/categories';
 
 function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
   const category = searchParams.get('category') || 'All';
-  const { products, categories: categoriesData } = useData();
   
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +50,7 @@ function SearchResults() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [query, category, products, categoriesData]);
+  }, [query, category]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -193,7 +193,7 @@ function SearchResults() {
           <div className="mt-16">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Popular Categories</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {Object.keys(categoriesData || {}).slice(0, 4).map((slug) => {
+              {Object.keys(categoriesData).slice(0, 4).map((slug) => {
                 const cat = categoriesData[slug];
                 return (
                   <Link
