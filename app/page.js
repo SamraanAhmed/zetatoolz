@@ -8,9 +8,31 @@ import { products } from './data/products';
 import { categoriesData } from './data/categories';
 
 export default function Home() {
-  const featuredProducts = products.slice(0, 3);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [mounted, setMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [dbData, setDbData] = useState(null);
+
+  useEffect(() => {
+    setMounted(true);
+    if (products && products.length > 0) {
+      const shuffled = [...products].sort(() => 0.5 - Math.random());
+      setFeaturedProducts(shuffled.slice(0, 12));
+    }
+    
+    // Fetch database configuration
+    const fetchDbData = async () => {
+      try {
+        const res = await fetch('/api/admin/data', { cache: 'no-store' });
+        const json = await res.json();
+        setDbData(json);
+      } catch (err) {
+        console.error('Error fetching database data:', err);
+      }
+    };
+    fetchDbData();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -22,33 +44,69 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Build slides dynamically from categories data - MEGA CATEGORY SWITCHER
-  const slides = Object.keys(categoriesData).map(categorySlug => {
-    const category = categoriesData[categorySlug];
-    
-    // Get top 3 subcategories for this main category
-    const subcategoryKeys = Object.keys(category.subcategories).slice(0, 3);
-    const topSubcategories = subcategoryKeys.map(subSlug => ({
+  // Build slides dynamically from categories data or selected hero products
+  const categoriesList = dbData?.categories || Object.keys(categoriesData).map(slug => ({
+    slug,
+    name: categoriesData[slug].name,
+    description: categoriesData[slug].description,
+    subcategories: Object.keys(categoriesData[slug].subcategories).map(subSlug => ({
       slug: subSlug,
-      categorySlug: categorySlug,
-      ...category.subcategories[subSlug]
-    }));
+      name: categoriesData[slug].subcategories[subSlug].name,
+      subsubcategories: Object.keys(categoriesData[slug].subcategories[subSlug].subsubcategories || {}).map(subsubSlug => ({
+        slug: subsubSlug,
+        name: categoriesData[slug].subcategories[subSlug].subsubcategories[subsubSlug].name,
+        products: []
+      })),
+      products: []
+    }))
+  }));
 
-    // Assign colors based on category
-    const colorMap = {
-      'beauty-instruments': '#8fcfe9ff',
-      'medical-instruments': '#8fcfe9ff',
-      'industrial-tools': '#8fcfe9ff',
-      'jewelry-tools': '#8fcfe9ff'
-    };
+  const slides = categoriesList.map(cat => {
+    // Collect all products for this category from the database
+    const allCatProducts = [];
+    cat.subcategories?.forEach(sub => {
+      sub.products?.forEach(p => {
+        allCatProducts.push({ ...p, categorySlug: cat.slug, categoryName: cat.name });
+      });
+      sub.subsubcategories?.forEach(subsub => {
+        subsub.products?.forEach(p => {
+          allCatProducts.push({ ...p, categorySlug: cat.slug, categoryName: cat.name });
+        });
+      });
+    });
+
+    // If no products were found in db, fallback to static products matching this category
+    if (allCatProducts.length === 0) {
+      products.forEach(p => {
+        const catName = categoriesData[cat.slug]?.name || cat.name;
+        if (p.category === catName) {
+          allCatProducts.push({
+            id: p.id,
+            name: p.name,
+            image: p.image,
+            description: p.description,
+            categorySlug: cat.slug,
+            categoryName: catName
+          });
+        }
+      });
+    }
+
+    // Get selected hero product IDs for this category
+    const selectedIds = dbData?.heroProducts?.[cat.slug] || [];
+    let featuredProducts = selectedIds.map(id => allCatProducts.find(p => p.id === id)).filter(Boolean);
+
+    // Fallback: if no products are selected, default to the first 3 products of this category
+    if (featuredProducts.length === 0) {
+      featuredProducts = allCatProducts.slice(0, 3);
+    }
 
     return {
-      categorySlug,
-      categoryName: category.name,
-      description: category.description,
-      bgColor: colorMap[categorySlug] || '#8fcfe9ff',
-      viewAllLink: `/categories/${categorySlug}`,
-      subcategories: topSubcategories
+      categorySlug: cat.slug,
+      categoryName: cat.name,
+      description: cat.description || 'Precision Instruments',
+      viewAllLink: `/categories/${cat.slug}`,
+      products: featuredProducts
     };
   });
 
@@ -165,29 +223,36 @@ export default function Home() {
   return (
     <div className="space-y-12 md:space-y-20">
       {/* Hero Carousel Section */}
-      <section className="relative h-[500px] sm:h-[550px] lg:h-[600px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl">
-        {/* Background with gradient */}
+      <section className="relative h-[360px] sm:h-[400px] lg:h-[600px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl">
+        {/* Background with gradient on desktop, solid blue on mobile */}
         <div 
-          className="absolute inset-0 transition-colors duration-700"
+          className="absolute inset-0 transition-all duration-700"
           style={{
-            background: '#4fb9e3',
-            backgroundImage: 'linear-gradient(90deg, rgba(79, 185, 227, 1) 0%, rgba(255, 255, 255, 1) 64%)'
+            backgroundColor: '#4fb9e3',
+            backgroundImage: isMobile
+              ? 'none'
+              : 'linear-gradient(90deg, rgba(79, 185, 227, 1) 0%, rgba(255, 255, 255, 1) 64%)'
           }}
         />
 
         {/* Content Container */}
-        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-          {/* Left Side - Typography */}
-          <div className="w-full lg:w-[45%] z-10 animate-fade-in">
-            <div className="mb-2 text-white/90 text-xs sm:text-sm font-medium tracking-widest uppercase">
-              {slides[currentSlide].description}
+        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-center lg:justify-between py-6 lg:py-0 gap-6">
+          {/* Left Side - Typography (Static meta header + Sliding Category Info) */}
+          <div className="w-full lg:w-[45%] z-10 animate-fade-in text-center lg:text-left flex flex-col items-center lg:items-start">
+            {/* Proper Niched Header Meta Title (Static at the top on Mobile/Desktop) */}
+            <div className="mb-3 text-white/95 text-[10px] sm:text-xs font-bold tracking-widest uppercase bg-slate-900/10 px-3 py-1 rounded-full border border-white/10 backdrop-blur-xs">
+              ZETA INSTRUMENTS • PREMIUM SUPPLIER
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-white mb-4 sm:mb-6 leading-tight drop-shadow-xl">
-              {slides[currentSlide].categoryName}
+
+            {/* Sliding Category Name */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-white mb-3 sm:mb-6 leading-tight drop-shadow-xl min-h-[40px] sm:min-h-[60px] flex items-center justify-center transition-all duration-300">
+              {slides[currentSlide]?.categoryName}
             </h1>
+
+            {/* Category Description / Sub-category Link */}
             <Link 
-              href={slides[currentSlide].viewAllLink}
-              className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium tracking-wide mt-2 sm:mt-4 border-b border-white/30 hover:border-white pb-1 transition-all text-sm sm:text-base"
+              href={slides[currentSlide]?.viewAllLink || '#'}
+              className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium tracking-wide border-b border-white/30 hover:border-white pb-1 transition-all text-xs sm:text-base"
             >
               View All Sub-categories
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,15 +261,15 @@ export default function Home() {
             </Link>
             
             {/* Navigation Dots */}
-            <div className="flex gap-2 sm:gap-3 mt-8 sm:mt-12">
+            <div className="flex gap-2 sm:gap-3 mt-6 sm:mt-12">
               {slides.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
                   className={`transition-all duration-300 rounded-full ${
                     index === currentSlide 
-                      ? 'w-8 sm:w-12 h-2 sm:h-3 bg-white' 
-                      : 'w-2 sm:w-3 h-2 sm:h-3 bg-white/50 hover:bg-white/75'
+                      ? 'w-8 sm:w-12 h-2 bg-white' 
+                      : 'w-2 h-2 bg-white/50 hover:bg-white/75'
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -212,12 +277,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right Side - Horizontal Subcategory Cards Stacked (Hidden on Mobile) */}
-          <div className="hidden lg:flex lg:w-[55%] h-full items-center justify-end relative pr-4">
-            <div className="relative w-full h-[520px] flex flex-col justify-center gap-4">
-              {slides[currentSlide].subcategories.slice(0, 3).map((sub, idx) => (
+          {/* Right Side - Desktop Only (Hidden on Mobile) */}
+          <div className="hidden lg:flex lg:w-[55%] items-center justify-end relative pr-4">
+            {/* Desktop View: Horizontal Featured Product Cards Stacked */}
+            <div className="flex flex-col justify-center gap-4 w-full h-[520px]">
+              {slides[currentSlide]?.products?.slice(0, 3).map((prod, idx) => (
                 <div
-                  key={sub.slug}
+                  key={`${prod.id}-${idx}`}
                   className={`relative transition-all duration-700 animate-fade-in hover:scale-105 ${
                     idx === 1 ? 'hover:scale-[1.03] z-20' : ''
                   }`}
@@ -227,19 +293,17 @@ export default function Home() {
                     marginLeft: 'auto' 
                   }}
                 >
-                  <Link href={`/categories/${sub.categorySlug}/${sub.slug}`} className="block w-full h-full">
+                  <Link href={`/products/${prod.id}`} className="block w-full h-full">
                     <div className={`relative w-full h-full bg-white rounded-xl shadow-xl overflow-hidden border-2 border-white group ${idx === 1 ? 'rounded-2xl shadow-2xl border-4' : ''}`}>
                       <Image
-                        src={sub.image || 'https://placehold.co/600x400/png?text=Image+Not+Found'}
-                        alt={sub.name}
+                        src={prod.image || '/placeholder.jpg'}
+                        alt={prod.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
                       />
-                      <div className={`absolute inset-0 flex items-center ${idx === 1 ? 'bg-gradient-to-r from-black/70 via-black/40 to-transparent p-6' : 'bg-gradient-to-r from-black/60 to-transparent p-5'}`}>
-
+                      <div className={`absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/85 via-black/35 to-transparent ${idx === 1 ? 'p-6' : 'p-4'}`}>
+                        <p className="text-white font-bold text-base sm:text-lg drop-shadow-md truncate">{prod.name}</p>
+                        <p className="text-cyan-400 text-xs sm:text-sm font-semibold mt-1 uppercase tracking-wider">{prod.id}</p>
                       </div>
                     </div>
                   </Link>
@@ -309,9 +373,30 @@ export default function Home() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {featuredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {mounted ? (
+            featuredProducts.map((product, index) => (
+              <ProductCard key={`${product.id}-${index}`} product={product} />
+            ))
+          ) : (
+            Array.from({ length: 12 }).map((_, index) => (
+              <div 
+                key={`skeleton-${index}`}
+                className="bg-white rounded-lg overflow-hidden border border-gray-200 flex flex-col h-[400px] animate-pulse shadow-sm"
+              >
+                <div className="h-56 bg-gray-100"></div>
+                <div className="p-5 flex-grow flex flex-col gap-3">
+                  <div className="h-6 bg-gray-100 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-100 rounded w-1/4"></div>
+                  <div className="h-4 bg-gray-100 rounded w-full"></div>
+                  <div className="h-4 bg-gray-100 rounded w-5/6"></div>
+                  <div className="grid grid-cols-2 gap-2 mt-auto pt-4">
+                    <div className="h-10 bg-gray-100 rounded-lg"></div>
+                    <div className="h-10 bg-gray-100 rounded-lg"></div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </section>
 

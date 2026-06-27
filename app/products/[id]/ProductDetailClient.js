@@ -39,14 +39,21 @@ export default function ProductDetailClient({ id }) {
     });
     
     const variantInfo = selectedVariant ? ` - ${selectedVariant.name}` : '';
-    const subject = `Inquiry: Purchase Request for ${product.name}${variantInfo}`;
+    const subject = `Order Status & Tracking Request`;
     const body = `Hello,
 
-I am interested in purchasing the ${product.name}${variantInfo}.
+I would like to request an update on my recent order. Please find the order details below:
 
-Please provide the current market price for today, ${today}.
+Order Date: ${today}
+Product(s) Ordered: ${product.name}${variantInfo}
+Article Number: ${product.id}
 
-Thank you.`;
+Kindly share the current status of the order and the tracking information, if available.
+
+Thank you.
+
+Best regards,
+Customer`;
 
     // Check if user is on mobile device
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -258,7 +265,7 @@ Thank you.`;
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                Request Price Cart
+                Email Inquiry
               </button>
             </div>
 

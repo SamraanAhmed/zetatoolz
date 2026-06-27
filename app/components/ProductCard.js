@@ -19,7 +19,7 @@ export default function ProductCard({ product }) {
 
 I would like to request an update on my recent order. Please find the order details below:
 
-Order Date: {{ORDER_DATE}}
+Order Date: ${today}
 Product(s) Ordered: ${product.name}
 Article Number: ${product.id}
 

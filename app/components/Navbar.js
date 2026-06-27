@@ -84,6 +84,38 @@ export default function Navbar() {
     router.push(`/products/${productId}`);
   };
 
+  const handleCatalogRequest = () => {
+    const today = new Date().toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+
+    const subject = `Request for Latest Product Catalog`;
+    const body = `Dear Sir/Madam,
+
+Please send me your latest product catalog.
+
+Date: ${today}
+
+Thank you.
+
+Best regards,
+[Customer Name]`;
+
+    // Check if user is on mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      const mailtoURL = `mailto:info@zetatoolz.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoURL;
+    } else {
+      const gmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent('info@zetatoolz.com')}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.open(gmailURL, '_blank');
+    }
+  };
+
   const productCategories = Object.keys(categoriesData).map(slug => ({
     name: categoriesData[slug].name,
     href: `/categories/${slug}`,
@@ -212,9 +244,9 @@ export default function Navbar() {
               {showDropdown && dropdownResults.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-2xl z-50 max-h-[500px] overflow-y-auto">
                   <div className="p-2">
-                    {dropdownResults.map((product) => (
+                    {dropdownResults.map((product, index) => (
                       <button
-                        key={product.id}
+                        key={`${product.id}-${index}`}
                         onClick={() => handleProductClick(product.id)}
                         className="w-full flex items-center gap-4 p-3 hover:bg-gray-50 rounded-lg transition group text-left"
                       >
@@ -279,6 +311,21 @@ export default function Navbar() {
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+
+              {/* Mobile Catalog Request */}
+              <button 
+                onClick={handleCatalogRequest}
+                className="p-2 text-white rounded transition cursor-pointer flex items-center justify-center"
+                style={{ backgroundColor: '#00afef' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0099d6'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#00afef'}
+                title="Request Catalog"
+                aria-label="Request Catalog"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </button>
 
@@ -439,6 +486,20 @@ export default function Navbar() {
             {/* Right: Cart */}
             <div className="flex items-center gap-6">
 
+              {/* Request Catalog Button */}
+              <button 
+                onClick={handleCatalogRequest}
+                className="flex items-center gap-2 text-white font-bold py-3 px-4 rounded transition cursor-pointer text-sm shadow-md"
+                style={{ backgroundColor: '#00afef' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0099d6'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#00afef'}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                Request Catalog
+              </button>
+
               {/* Shopping Cart */}
               <Link 
                 href="/cart" 
@@ -563,6 +624,20 @@ export default function Navbar() {
                     Cart {getCartCount() > 0 && `(${getCartCount()})`}
                   </span>
                 </Link>
+
+                {/* Request Catalog */}
+                <button 
+                  onClick={() => {
+                    setSidebarOpen(false);
+                    handleCatalogRequest();
+                  }}
+                  className="w-full flex items-center gap-4 p-4 rounded-lg hover:bg-cyan-50 transition group text-left cursor-pointer"
+                >
+                  <svg className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  <span className="font-medium text-gray-900 group-hover:text-cyan-600">Request Catalog</span>
+                </button>
               </div>
             </nav>
           </div>
@@ -638,9 +713,9 @@ export default function Navbar() {
               <div className="mt-6">
                 <h3 className="text-sm font-semibold text-gray-700 mb-3">Quick Results</h3>
                 <div className="space-y-2">
-                  {dropdownResults.map((product) => (
+                  {dropdownResults.map((product, index) => (
                     <button
-                      key={product.id}
+                      key={`${product.id}-${index}`}
                       onClick={() => {
                         handleProductClick(product.id);
                         setMobileSearchOpen(false);

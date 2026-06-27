@@ -1,5 +1,5 @@
-import ProductCard from '../components/ProductCard';
-import { products } from '../data/products';
+import { Suspense } from 'react';
+import ProductsListClient from './ProductsListClient';
 
 export const metadata = {
   title: 'Shop All Products | Zeta Toolz',
@@ -8,17 +8,14 @@ export const metadata = {
 
 export default function ProductsPage() {
   return (
-    <div className="animate-fade-in">
-      <div className="text-center max-w-2xl mx-auto mb-16">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">All Products</h1>
-        <p className="text-gray-600">Explore the latest precision instruments designed to enhance your professional work. Quality, performance, and style in every product.</p>
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center py-20 min-h-[400px]">
+        <div className="w-16 h-16 border-4 border-gray-200 border-t-cyan-600 rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-600">Loading products...</p>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </div>
+    }>
+      <ProductsListClient />
+    </Suspense>
   );
 }
+

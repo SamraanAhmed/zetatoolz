@@ -4,6 +4,8 @@ import path from 'path';
 
 const DATA_FILE_PATH = path.join(process.cwd(), 'app', 'data', 'data.json');
 
+export const dynamic = 'force-dynamic';
+
 // Helper function to read data
 function readData() {
   try {
@@ -231,23 +233,39 @@ export async function POST(request) {
         const subcategory = category.subcategories.find(s => s.slug === subcategorySlug);
         if (!subcategory) return NextResponse.json({ error: 'Subcategory not found' }, { status: 404 });
 
-        const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
-        if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
+        let productsList = [];
+        let productIndex = -1;
 
-        const productIndex = subsubcategory.products.findIndex(p => p.id === newData.id);
+        if (subsubcategorySlug) {
+          const subsubcategory = subcategory.subsubcategories?.find(s => s.slug === subsubcategorySlug);
+          if (!subsubcategory) return NextResponse.json({ error: 'Sub-subcategory not found' }, { status: 404 });
+          
+          if (!subsubcategory.products) subsubcategory.products = [];
+          productsList = subsubcategory.products;
+          productIndex = productsList.findIndex(p => p.id === newData.id);
+        } else {
+          if (!subcategory.products) subcategory.products = [];
+          productsList = subcategory.products;
+          productIndex = productsList.findIndex(p => p.id === newData.id);
+        }
+
         if (productIndex === -1) {
           return NextResponse.json({ error: 'Product not found' }, { status: 404 });
         }
 
-        subsubcategory.products[productIndex] = {
+        const existingProduct = productsList[productIndex];
+
+        productsList[productIndex] = {
           id: newData.id,
           name: newData.name,
           description: newData.description,
-          image: newData.image,
+          image: newData.image || existingProduct.image,
+          images: newData.images || existingProduct.images || [newData.image || existingProduct.image],
+          variants: newData.variants || existingProduct.variants || [],
           details: {
-            overview: newData.overview || newData.description,
-            specifications: newData.specifications || {},
-            features: newData.features || []
+            overview: newData.overview || newData.description || existingProduct.details?.overview,
+            specifications: newData.specifications || existingProduct.details?.specifications || {},
+            features: newData.features || existingProduct.details?.features || []
           }
         };
         break;
@@ -338,6 +356,15 @@ export async function POST(request) {
         }
 
         subcategory.subsubcategories.splice(subSubIndex, 1);
+        break;
+      }
+
+      case 'update-hero-products': {
+        const { productIds } = newData;
+        if (!currentData.heroProducts || Array.isArray(currentData.heroProducts)) {
+          currentData.heroProducts = {};
+        }
+        currentData.heroProducts[categorySlug] = productIds || [];
         break;
       }
 

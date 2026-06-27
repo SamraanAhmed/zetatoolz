@@ -15548,5 +15548,22 @@
                 }
             ]
         }
-    ]
+    ],
+    "heroProducts": {
+        "beauty-instruments": [
+            "ZT-10-04",
+            "ZT-10-05",
+            "ZT-14-37"
+        ],
+        "embroidery": [
+            "ZT-06-03",
+            "ZT-06-27",
+            "ZT-06-35"
+        ],
+        "dental-instruments": [
+            "ZT-01-01",
+            "ZT-01-23",
+            "ZT-01-34"
+        ]
+    }
 }
