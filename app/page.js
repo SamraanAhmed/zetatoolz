@@ -241,7 +241,13 @@ export default function Home() {
           <div className="w-full lg:w-[45%] z-10 animate-fade-in text-center lg:text-left flex flex-col items-center lg:items-start">
             {/* Proper Niched Header Meta Title (Static at the top on Mobile/Desktop) */}
             <div className="mb-3 text-white/95 text-[10px] sm:text-xs font-bold tracking-widest uppercase bg-slate-900/10 px-3 py-1 rounded-full border border-white/10 backdrop-blur-xs">
-              ZETA INSTRUMENTS • PREMIUM SUPPLIER
+              {slides[currentSlide]?.categorySlug === 'embroidery'
+                ? 'ZETA TOOLZ • PRECISION TOOLS FOR EVERY STITCH'
+                : slides[currentSlide]?.categorySlug === 'dental-instruments'
+                ? 'ZETA TOOLZ • PRECISION YOU CAN TRUST'
+                : slides[currentSlide]?.categorySlug === 'beauty-instruments'
+                ? 'ZETA TOOLZ • PRECISION FOR PERFECT GROOMING'
+                : 'ZETA INSTRUMENTS • PREMIUM SUPPLIER'}
             </div>
 
             {/* Sliding Category Name */}
@@ -302,10 +308,7 @@ export default function Home() {
                         unoptimized
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                      <div className={`absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/85 via-black/35 to-transparent ${idx === 1 ? 'p-6' : 'p-4'}`}>
-                        <p className="text-white font-bold text-base sm:text-lg drop-shadow-md truncate">{prod.name}</p>
-                        <p className="text-cyan-400 text-xs sm:text-sm font-semibold mt-1 uppercase tracking-wider">{prod.id}</p>
-                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
                     </div>
                   </Link>
                 </div>
