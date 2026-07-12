@@ -6575,26 +6575,8 @@
                     ]
                 },
                 {
-                    "slug": "hoops",
-                    "name": "Hoops",
-                    "description": "",
-                    "subsubcategories": []
-                },
-                {
-                    "slug": "tweezers",
-                    "name": "Tweezers",
-                    "description": "",
-                    "subsubcategories": []
-                },
-                {
-                    "slug": "kits",
-                    "name": "Kits",
-                    "description": "",
-                    "subsubcategories": []
-                },
-                {
-                    "slug": "other-tools",
-                    "name": "Other tools",
+                    "slug": "embroidery-hoops",
+                    "name": "Embroidery Hoops",
                     "description": "",
                     "subsubcategories": []
                 }
@@ -19611,19 +19593,17 @@
     ],
     "heroProducts": {
         "beauty-instruments": [
-            "ZT-10-47",
-            "ZT-15-45",
-            "ZT-14-29"
+            "ZT-10-16",
+            "ZT-15-29",
+            "ZT-14-21"
         ],
         "embroidery": [
-            "ZT-06-03",
-            "ZT-06-27",
-            "ZT-06-35"
+            "ZT-06-01"
         ],
         "dental-instruments": [
-            "ZT-01-01",
-            "ZT-01-23",
-            "ZT-01-34"
+            "ZT-01-08",
+            "ZT-01-74",
+            "ZT-05-31"
         ]
     }
 }
