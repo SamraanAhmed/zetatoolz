@@ -117,7 +117,29 @@ export default function Footer() {
         </div>
       </div>
 
-    
+      {/* Certifications Row */}
+      <div className="border-t border-slate-800/60 max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 font-sans">
+          <div className="text-center md:text-left">
+            <h5 className="text-sm font-semibold text-slate-200 uppercase tracking-wider mb-1">Our Certifications & Affiliations</h5>
+            <p className="text-xs text-slate-400">ISO certified quality control & trade association memberships</p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            <div className="h-12 w-28 bg-white rounded-lg border border-slate-700 flex items-center justify-center p-2 hover:bg-slate-50 transition-colors shadow-xs">
+              <img src="/Cirtificates/ISO-9001.png" alt="ISO 9001" className="h-full object-contain opacity-90 hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="h-12 w-20 bg-white rounded-lg border border-slate-700 flex items-center justify-center p-2 hover:bg-slate-50 transition-colors shadow-xs">
+              <img src="/Cirtificates/CE.png" alt="CE Certified" className="h-full object-contain opacity-90 hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="h-12 w-20 bg-white rounded-lg border border-slate-700 flex items-center justify-center p-2 hover:bg-slate-50 transition-colors shadow-xs">
+              <img src="/Cirtificates/SCCI.png" alt="SCCI Member" className="h-full object-contain opacity-90 hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="h-12 w-20 bg-white rounded-lg border border-slate-700 flex items-center justify-center p-2 hover:bg-slate-50 transition-colors shadow-xs">
+              <img src="/Cirtificates/SIMAP.png" alt="SIMAP Member" className="h-full object-contain opacity-90 hover:opacity-100 transition-opacity" />
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Copyright Bar with Payment Methods */}
       <div className="border-t border-slate-800 bg-slate-950">
