@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { products } from '../../data/products';
+import { products, getProductBySlugOrId } from '../../data/products';
 import { useCart } from '../../context/CartContext';
 
-export default function ProductDetailClient({ id }) {
+export default function ProductDetailClient({ id, initialProduct }) {
   const { addToCart } = useCart();
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState(initialProduct || null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -16,15 +16,19 @@ export default function ProductDetailClient({ id }) {
   const [imageErrors, setImageErrors] = useState({});
 
   useEffect(() => {
-    // Find product by ID
-    const foundProduct = products.find(p => p.id === id);
+    // Find product by ID or slug if not provided initially
+    const foundProduct = initialProduct || getProductBySlugOrId(id);
     setProduct(foundProduct);
+
+    if (foundProduct) {
+      document.title = `${foundProduct.name} | Zeta Toolz`;
+    }
     
     // Initialize variant if available
     if (foundProduct?.variants?.length > 0) {
       setSelectedVariant(foundProduct.variants[0]);
     }
-  }, [id]);
+  }, [id, initialProduct]);
 
   useEffect(() => {
     setSelectedImage(0);
@@ -141,7 +145,11 @@ Customer`;
                       ? 'https://placehold.co/800x800/f3f4f6/6b7280?text=' + encodeURIComponent(product?.name || '')
                       : imageGallery[selectedImage]
                   }
-                  alt={product?.name || 'Product Image'}
+                  alt={
+                    selectedVariant 
+                      ? `${product?.name || 'Product'} - ${selectedVariant.name}`
+                      : (product?.name || 'Product Image')
+                  }
                   fill
                   unoptimized
                   className="object-cover transition-transform duration-200 ease-out"
@@ -180,7 +188,11 @@ Customer`;
                 >
                   <Image
                     src={imageErrors[img] ? 'https://placehold.co/400x400/f3f4f6/6b7280?text=View+' + (idx + 1) : img}
-                    alt={`${product?.name || 'Product'} view ${idx + 1}`}
+                    alt={
+                      selectedVariant 
+                        ? `${product?.name || 'Product'} - ${selectedVariant.name} (View ${idx + 1})`
+                        : `${product?.name || 'Product'} (View ${idx + 1})`
+                    }
                     fill
                     unoptimized
                     className="object-cover"

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProductCard from './components/ProductCard';
-import { products } from './data/products';
+import { products, slugify } from './data/products';
 import { categoriesData } from './data/categories';
 
 export default function Home() {
@@ -66,11 +66,11 @@ export default function Home() {
     const allCatProducts = [];
     cat.subcategories?.forEach(sub => {
       sub.products?.forEach(p => {
-        allCatProducts.push({ ...p, categorySlug: cat.slug, categoryName: cat.name });
+        allCatProducts.push({ ...p, slug: p.slug || slugify(p.name) || p.id, categorySlug: cat.slug, categoryName: cat.name });
       });
       sub.subsubcategories?.forEach(subsub => {
         subsub.products?.forEach(p => {
-          allCatProducts.push({ ...p, categorySlug: cat.slug, categoryName: cat.name });
+          allCatProducts.push({ ...p, slug: p.slug || slugify(p.name) || p.id, categorySlug: cat.slug, categoryName: cat.name });
         });
       });
     });
@@ -82,6 +82,7 @@ export default function Home() {
         if (p.category === catName) {
           allCatProducts.push({
             id: p.id,
+            slug: p.slug || slugify(p.name) || p.id,
             name: p.name,
             image: p.image,
             description: p.description,
@@ -299,7 +300,7 @@ export default function Home() {
                     marginLeft: 'auto' 
                   }}
                 >
-                  <Link href={`/products/${prod.id}`} className="block w-full h-full">
+                  <Link href={`/products/${prod.slug || slugify(prod.name) || prod.id}`} className="block w-full h-full">
                     <div className={`relative w-full h-full bg-white rounded-xl shadow-xl overflow-hidden border-2 border-white group ${idx === 1 ? 'rounded-2xl shadow-2xl border-4' : ''}`}>
                       <Image
                         src={prod.image || '/placeholder.jpg'}

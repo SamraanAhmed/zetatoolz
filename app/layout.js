@@ -4,8 +4,8 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 export const metadata = {
-  title: 'Zeta Toolz',
-  description: 'Leading manufacturer of surgical-grade beauty instruments, medical tools, and industrial hardware. ISO 9001 & CE certified precision instruments for professionals worldwide.',
+  title: 'Zeta Toolz | Dental, Beauty, Embroidery & Lock Picking Tools Manufacturer',
+  description: 'Zeta Toolz is a manufacturer and exporter of premium dental instruments, beauty instruments, embroidery tools and lock picking tools from Sialkot, Pakistan. We provide OEM manufacturing, private label and wholesale solutions for distributors worldwide.',
 };
 
 export default function RootLayout({ children }) {

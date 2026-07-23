@@ -1,4 +1,10 @@
 import jsonData from './data.json';
+import { slugify } from './products';
+
+const mapProductsWithSlug = (prods) => (prods || []).map(p => ({
+  ...p,
+  slug: p.slug || slugify(p.name) || p.id
+}));
 
 // Helper function to get first product image from a category/subcategory/subsubcategory
 function getFirstProductImage(products) {
@@ -145,7 +151,7 @@ export function getCategoryInfo(categorySlug, subcategorySlug = null, subsubcate
           name: subsubcategory.name,
           description: subsubcategory.description,
           image: getFirstProductImage(subsubcategory.products), // Get from products
-          products: subsubcategory.products || []
+          products: mapProductsWithSlug(subsubcategory.products)
         }
       };
     }
@@ -161,7 +167,7 @@ export function getCategoryInfo(categorySlug, subcategorySlug = null, subsubcate
         description: subcategory.description,
         image: getFirstImageFromSubsubcategories(subcategory.subsubcategories), // Get from products
         subsubcategories: subcategory.subsubcategories || [],
-        products: subcategory.products || [] // Include products from subcategory
+        products: mapProductsWithSlug(subcategory.products) // Include products from subcategory
       }
     };
   }

@@ -6,7 +6,7 @@ import { useCart } from '../context/CartContext';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { categoriesData } from '../data/categories';
-import { products } from '../data/products';
+import { products, slugify } from '../data/products';
 
 export default function Navbar() {
   const { getCartCount, getCartTotal } = useCart();
@@ -78,10 +78,11 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleProductClick = (productId) => {
+  const handleProductClick = (product) => {
     setShowDropdown(false);
     setSearchQuery('');
-    router.push(`/products/${productId}`);
+    const identifier = typeof product === 'object' ? (product.slug || slugify(product.name) || product.id) : product;
+    router.push(`/products/${identifier}`);
   };
 
   const handleCatalogRequest = () => {
@@ -248,7 +249,7 @@ Best regards,
                     {dropdownResults.map((product, index) => (
                       <button
                         key={`${product.id}-${index}`}
-                        onClick={() => handleProductClick(product.id)}
+                        onClick={() => handleProductClick(product.slug || product.id)}
                         className="w-full flex items-center gap-4 p-3 hover:bg-gray-50 rounded-lg transition group text-left"
                       >
                         {/* Product Image */}
@@ -718,7 +719,7 @@ Best regards,
                     <button
                       key={`${product.id}-${index}`}
                       onClick={() => {
-                        handleProductClick(product.id);
+                        handleProductClick(product.slug || product.id);
                         setMobileSearchOpen(false);
                       }}
                       className="w-full flex items-center gap-4 p-3 bg-gray-50 hover:bg-cyan-50 rounded-lg transition group text-left"

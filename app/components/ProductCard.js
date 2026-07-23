@@ -11,8 +11,19 @@ function stripHtml(html) {
   return html.replace(/<[^>]*>/g, '');
 }
 
+function slugify(text) {
+  if (!text) return '';
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
+  const targetSlug = product.slug || slugify(product.name) || product.id;
   const [imgSrc, setImgSrc] = useState(
     product.image || 'https://placehold.co/400x400/f3f4f6/6b7280?text=' + encodeURIComponent(product.name)
   );
@@ -58,7 +69,7 @@ export default function ProductCard({ product }) {
    return (
      <div className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col h-full">
        {/* Product Image */}
-       <Link href={`/products/${product.id}`} className="h-56 bg-gray-100 relative overflow-hidden group block">
+       <Link href={`/products/${targetSlug}`} className="h-56 bg-gray-100 relative overflow-hidden group block">
          <Image 
            src={imgSrc} 
            alt={product.name}
@@ -72,7 +83,7 @@ export default function ProductCard({ product }) {
        
        {/* Product Info */}
        <div className="p-5 flex-1 flex flex-col">
-         <Link href={`/products/${product.id}`}>
+         <Link href={`/products/${targetSlug}`}>
            <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem] hover:text-cyan-600 transition-colors cursor-pointer">{product.name}</h3>
          </Link>
          
