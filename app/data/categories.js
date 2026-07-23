@@ -1,10 +1,15 @@
 import jsonData from './data.json';
 import { slugify } from './products';
 
-const mapProductsWithSlug = (prods) => (prods || []).map(p => ({
-  ...p,
-  slug: p.slug || slugify(p.name) || p.id
-}));
+const mapProductsWithSlug = (prods) => (prods || []).map(p => {
+  const nameSlug = slugify(p.name);
+  const idSlug = (p.id || '').toLowerCase();
+  const fallbackSlug = nameSlug ? `${nameSlug}-${idSlug}` : idSlug;
+  return {
+    ...p,
+    slug: p.slug || fallbackSlug
+  };
+});
 
 // Helper function to get first product image from a category/subcategory/subsubcategory
 function getFirstProductImage(products) {

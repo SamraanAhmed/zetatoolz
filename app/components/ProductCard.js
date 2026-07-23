@@ -23,7 +23,10 @@ function slugify(text) {
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
-  const targetSlug = product.slug || slugify(product.name) || product.id;
+  const nameSlug = slugify(product.name);
+  const idSlug = (product.id || '').toLowerCase();
+  const fallbackSlug = nameSlug ? `${nameSlug}-${idSlug}` : idSlug;
+  const targetSlug = product.slug || fallbackSlug;
   const [imgSrc, setImgSrc] = useState(
     product.image || 'https://placehold.co/400x400/f3f4f6/6b7280?text=' + encodeURIComponent(product.name)
   );

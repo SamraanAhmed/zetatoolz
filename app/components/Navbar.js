@@ -81,7 +81,14 @@ export default function Navbar() {
   const handleProductClick = (product) => {
     setShowDropdown(false);
     setSearchQuery('');
-    const identifier = typeof product === 'object' ? (product.slug || slugify(product.name) || product.id) : product;
+    const getProductIdentifier = (p) => {
+      if (typeof p === 'string') return p;
+      if (p?.slug) return p.slug;
+      const nameSlug = slugify(p?.name);
+      const idSlug = (p?.id || '').toLowerCase();
+      return nameSlug ? `${nameSlug}-${idSlug}` : idSlug;
+    };
+    const identifier = getProductIdentifier(product);
     router.push(`/products/${identifier}`);
   };
 

@@ -66,11 +66,17 @@ export default function Home() {
     const allCatProducts = [];
     cat.subcategories?.forEach(sub => {
       sub.products?.forEach(p => {
-        allCatProducts.push({ ...p, slug: p.slug || slugify(p.name) || p.id, categorySlug: cat.slug, categoryName: cat.name });
+        const nameSlug = slugify(p.name);
+        const idSlug = (p.id || '').toLowerCase();
+        const fallbackSlug = nameSlug ? `${nameSlug}-${idSlug}` : idSlug;
+        allCatProducts.push({ ...p, slug: p.slug || fallbackSlug, categorySlug: cat.slug, categoryName: cat.name });
       });
       sub.subsubcategories?.forEach(subsub => {
         subsub.products?.forEach(p => {
-          allCatProducts.push({ ...p, slug: p.slug || slugify(p.name) || p.id, categorySlug: cat.slug, categoryName: cat.name });
+          const nameSlug = slugify(p.name);
+          const idSlug = (p.id || '').toLowerCase();
+          const fallbackSlug = nameSlug ? `${nameSlug}-${idSlug}` : idSlug;
+          allCatProducts.push({ ...p, slug: p.slug || fallbackSlug, categorySlug: cat.slug, categoryName: cat.name });
         });
       });
     });
@@ -80,9 +86,12 @@ export default function Home() {
       products.forEach(p => {
         const catName = categoriesData[cat.slug]?.name || cat.name;
         if (p.category === catName) {
+          const nameSlug = slugify(p.name);
+          const idSlug = (p.id || '').toLowerCase();
+          const fallbackSlug = nameSlug ? `${nameSlug}-${idSlug}` : idSlug;
           allCatProducts.push({
             id: p.id,
-            slug: p.slug || slugify(p.name) || p.id,
+            slug: p.slug || fallbackSlug,
             name: p.name,
             image: p.image,
             description: p.description,
@@ -300,7 +309,7 @@ export default function Home() {
                     marginLeft: 'auto' 
                   }}
                 >
-                  <Link href={`/products/${prod.slug || slugify(prod.name) || prod.id}`} className="block w-full h-full">
+                  <Link href={`/products/${prod.slug || (slugify(prod.name) ? `${slugify(prod.name)}-${(prod.id || '').toLowerCase()}` : prod.id)}`} className="block w-full h-full">
                     <div className={`relative w-full h-full bg-white rounded-xl shadow-xl overflow-hidden border-2 border-white group ${idx === 1 ? 'rounded-2xl shadow-2xl border-4' : ''}`}>
                       <Image
                         src={prod.image || '/placeholder.jpg'}

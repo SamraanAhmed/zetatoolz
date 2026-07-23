@@ -22,7 +22,7 @@ jsonData.categories.forEach(category => {
         subcategory.products.forEach(product => {
           const nameSlug = slugify(product.name);
           const idSlug = (product.id || '').toLowerCase();
-          const slug = nameSlug || idSlug;
+          const slug = nameSlug ? `${nameSlug}-${idSlug}` : idSlug;
 
           products.push({
             ...product,
@@ -41,7 +41,7 @@ jsonData.categories.forEach(category => {
             subsubcategory.products.forEach(product => {
               const nameSlug = slugify(product.name);
               const idSlug = (product.id || '').toLowerCase();
-              const slug = nameSlug || idSlug;
+              const slug = nameSlug ? `${nameSlug}-${idSlug}` : idSlug;
 
               products.push({
                 ...product,
